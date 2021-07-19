@@ -14,4 +14,6 @@ When you want to update the website, run `npm run deploy`. This should deploy th
 
 ## Notes
 
+* The dropdown menu doesn't sort sweeps at all now because it introduced some annoying performance issues with React. Looking in to solutions or alternatives.
+
 * The sdk directory `bundle/` needs to be in the `public/` directory because webpack won't serve `showcase.html` otherwise. This means that asset ins't minimized or processed before being deployed, which isn't entirely optimal. I'm not sure how to fix the webpack stuff at the moment :(
