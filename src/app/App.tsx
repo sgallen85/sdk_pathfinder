@@ -70,12 +70,8 @@ export default class App extends Component<{}, AppState> {
   }
 
   public async componentDidMount() {
-<<<<<<< HEAD
+    
     this.sdk = await GetSDK('showcase', defaultUrlParams.applicationKey);
-=======
-
-    this.sdk = await GetSDK('showcase', this.apiKey);
->>>>>>> 08bc26a (Implement fly through feature)
     await initComponents(this.sdk);
 
     const sweepData = (await this.sdk.Model.getData()).sweeps;
