@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/sdk_pathfinder/static/css/main.303b3e6d.chunk.css",
-    "main.js": "/sdk_pathfinder/static/js/main.b9032ca8.chunk.js",
-    "main.js.map": "/sdk_pathfinder/static/js/main.b9032ca8.chunk.js.map",
+    "main.js": "/sdk_pathfinder/static/js/main.76706d67.chunk.js",
+    "main.js.map": "/sdk_pathfinder/static/js/main.76706d67.chunk.js.map",
     "runtime-main.js": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js",
     "runtime-main.js.map": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js.map",
     "static/js/2.a4aff3a9.chunk.js": "/sdk_pathfinder/static/js/2.a4aff3a9.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.1dc9acb8.js",
     "static/js/2.a4aff3a9.chunk.js",
     "static/css/main.303b3e6d.chunk.css",
-    "static/js/main.b9032ca8.chunk.js"
+    "static/js/main.76706d67.chunk.js"
   ]
 }
