@@ -7,6 +7,7 @@ import Menu from './Menu';
 import Pathfinder from './Pathfinder';
 import { initComponents } from './sdk-components';
 import { pathRendererType } from './sdk-components/PathRenderer';
+import { cameraControllerType } from './sdk-components/CameraController';
 import { sweepIdToPoint } from './utils';
 
 export interface Sdk extends MpSdk {
@@ -43,7 +44,10 @@ export default class App extends Component<{}, AppState> {
   private sdk?: Sdk;
 
   private pathNode: any; // the node for the PathRenderer component
+  private path: any; // PathRenderer component. Needed for CameraController.
   private pathfinder?: Pathfinder;
+
+  private flyNode: any; // the node for the CameraController component
 
   constructor(props: any) {
     super(props);
@@ -66,20 +70,22 @@ export default class App extends Component<{}, AppState> {
   }
 
   public async componentDidMount() {
+    
     this.sdk = await GetSDK('showcase', defaultUrlParams.applicationKey);
     await initComponents(this.sdk);
+
+    const sweepData = (await this.sdk.Model.getData()).sweeps;
+    this.pathfinder = new Pathfinder(sweepData);
+    this.setState({
+      sweepData: sweepData,
+    });
+
     this.sdk.Sweep.data.subscribe({
       onCollectionUpdated: (collection: Dictionary<MpSdk.Sweep.ObservableSweepData>) => {
         this.setState({
           sweepMap: collection
         });
       },
-    });
-    const sweepData = (await this.sdk.Model.getData()).sweeps;
-    this.pathfinder = new Pathfinder(sweepData);
-
-    this.setState({
-      sweepData: sweepData,
     });
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
@@ -108,7 +114,7 @@ export default class App extends Component<{}, AppState> {
       if (!path) return;
       if (this.pathNode) this.pathNode.stop();
       this.pathNode = await sdk.Scene.createNode();
-      this.pathNode.addComponent(pathRendererType, {
+      this.path = this.pathNode.addComponent(pathRendererType, {
         path: path.map(id => sweepIdToPoint(id, sweepMap)),
         opacity: 0.7,
         radius: 0.12,
@@ -116,6 +122,33 @@ export default class App extends Component<{}, AppState> {
         color: 0x8df763,
       });
       this.pathNode.start();
+    }
+  }
+
+  private async startFly() {
+    const { sdk, path } = this;
+
+    if (sdk && path) {
+        this.endFly();
+        this.flyNode = await sdk.Scene.createNode();
+        const camCon = await this.flyNode.addComponent(cameraControllerType);
+        const cam = this.flyNode.addComponent('mp.camera', {
+            enabled: true,
+        });
+        camCon.bind('curve', path, 'curve');
+        cam.bind('camera', camCon, 'camera');
+        await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
+          transition: sdk.Mode.TransitionType.INSTANT,
+        });
+        this.flyNode.start();
+    }
+  }
+
+  private async endFly() {
+    const { sdk, flyNode } = this;
+    if (sdk && flyNode) {
+      flyNode.stop();
+      //await sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
     }
   }
 
@@ -130,6 +163,8 @@ export default class App extends Component<{}, AppState> {
           sweepData={sweepData}
           onChange={this.onOptionSelect}
         />
+        <button onClick={() => this.startFly()}>Start Fly</button>
+        <button onClick={() => this.endFly()}>End Fly</button>
       </div>
     );
   }

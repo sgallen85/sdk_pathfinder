@@ -10,6 +10,11 @@ interface PathRendererInputs {
   stepMultiplier: number;
 }
 
+interface PathRendererOutputs {
+  objectRoot: any;
+  curve: any;
+}
+
 class PathRenderer {
 
   private material: any;
@@ -26,7 +31,9 @@ class PathRenderer {
 
   private context: any;
 
-  private outputs: any;
+  private outputs = {
+    curve: null,
+  } as PathRendererOutputs;
 
   public onInit = async () => {
 
@@ -65,6 +72,7 @@ class PathRenderer {
     const pathMesh = new THREE.Mesh(extrudeGeometry, this.material)
 
     this.outputs.objectRoot = pathMesh;
+    this.outputs.curve = spline;
   };
 
   public onEvent = function(_type: any, _data: any) {
