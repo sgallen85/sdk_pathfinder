@@ -158,13 +158,15 @@ export default class App extends Component<{}, AppState> {
     return (
       <div className='app'>
         <Frame src={this.src} />
-        <Menu
-          currSweepId={currSweepId}
-          sweepData={sweepData}
-          onChange={this.onOptionSelect}
-        />
-        <button onClick={() => this.startFly()}>Start Fly</button>
-        <button onClick={() => this.endFly()}>End Fly</button>
+        <div>
+          <button onClick={() => this.startFly()}>Start Fly</button>
+          <button onClick={() => this.endFly()}>End Fly</button>
+          <Menu
+            currSweepId={currSweepId}
+            sweepData={sweepData}
+            onChange={this.onOptionSelect}
+          />
+        </div>
       </div>
     );
   }

@@ -1,5 +1,3 @@
-import { Vector3 } from "../../mp/sdk";
-
 interface CameraControllerInputs {
   curve: any,
   speed: number,
