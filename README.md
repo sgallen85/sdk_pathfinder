@@ -4,7 +4,7 @@ https://nwager-mp.github.io/sdk_pathfinder/
 
 ## Local Environment Setup
 
-1. After cloning the repo, run `npm install` to install the required packages (or `yarn install`).
+1. After cloning or pulling the repo, run `npm install` to install the required packages (or `yarn install`).
 
 2. Once that's done, run `yarn start` and go to `localhost:3000` (it'll probably open automatically). The website should be running.
 
