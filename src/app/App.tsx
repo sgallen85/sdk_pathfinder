@@ -37,9 +37,8 @@ export default class App extends Component<{}, AppState> {
 
   constructor(props: any) {
     super(props);
-    // let queryString = `m=${this.modelId}&applicationKey=${this.apiKey}`;
-    // queryString += '&title=0&qs=1&hr=0&brand=0&help=0&play=1';
-    let queryString = window.location.href.split('?')[1]; 
+    let queryString = `m=${this.modelId}&applicationKey=${this.apiKey}`;
+    queryString += '&title=0&qs=1&hr=0&brand=0&help=0&play=1';
     this.src = `${process.env.PUBLIC_URL}/bundle/showcase.html?${queryString}`;
 
     this.state = {
