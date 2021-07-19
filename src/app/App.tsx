@@ -26,7 +26,7 @@ interface AppState {
  * Do non-initializing SDK and UI stuff in other components/files.
  */
 export default class App extends Component<{}, AppState> {
-  private apiKey = 'e0iyprwgd7e7mckrhei7bwzza';
+  private apiKey = 'q44m20q8yk81yi0qgixrremda';//'e0iyprwgd7e7mckrhei7bwzza';
   private modelId = 'opSBz3SgMg3';
 
   private src: string; // the url source for the sdk
