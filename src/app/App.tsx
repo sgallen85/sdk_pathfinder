@@ -20,14 +20,24 @@ interface AppState {
   sweepMap?: Dictionary<MpSdk.Sweep.ObservableSweepData>;
 }
 
+const defaultUrlParams: any = {
+  m: 'opSBz3SgMg3',
+  applicationKey: 'q44m20q8yk81yi0qgixrremda',
+  title: '0',
+  qs: '1',
+  hr: '0',
+  brand: '0',
+  help: '0',
+  play: '1',
+}
+
 /**
  * This is the top level class for the app. It handles API key, model ID, and url stuff,
  * and holds references to objects/modules/components for object composition.
  * Do non-initializing SDK and UI stuff in other components/files.
  */
 export default class App extends Component<{}, AppState> {
-  private apiKey = 'q44m20q8yk81yi0qgixrremda';//'e0iyprwgd7e7mckrhei7bwzza';
-  private modelId = 'opSBz3SgMg3';
+
 
   private src: string; // the url source for the sdk
   private sdk?: Sdk;
@@ -37,8 +47,7 @@ export default class App extends Component<{}, AppState> {
 
   constructor(props: any) {
     super(props);
-    let queryString = `m=${this.modelId}&applicationKey=${this.apiKey}`;
-    queryString += '&title=0&qs=1&hr=0&brand=0&help=0&play=1';
+    const queryString = this.handleUrlParams();
     this.src = `${process.env.PUBLIC_URL}/bundle/showcase.html?${queryString}`;
 
     this.state = {
@@ -46,8 +55,18 @@ export default class App extends Component<{}, AppState> {
     };
   }
 
+  private handleUrlParams(): string {
+    const params = new URLSearchParams(window.location.search);
+    for (const [k, v] of Object.entries(defaultUrlParams)) {
+      if (!params.has(k)) {
+        params.append(k, ''+v); // convert v to string
+      }
+    }
+    return params.toString();
+  }
+
   public async componentDidMount() {
-    this.sdk = await GetSDK('showcase', this.apiKey);
+    this.sdk = await GetSDK('showcase', defaultUrlParams.applicationKey);
     await initComponents(this.sdk);
     this.sdk.Sweep.data.subscribe({
       onCollectionUpdated: (collection: Dictionary<MpSdk.Sweep.ObservableSweepData>) => {

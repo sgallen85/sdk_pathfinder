@@ -77,7 +77,7 @@ class PathRenderer {
   };
 
   public onDestroy = () => {
-      this.material?.dispose();
+    this.material?.dispose();
   };
 }
 

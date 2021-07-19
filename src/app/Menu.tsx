@@ -1,6 +1,7 @@
-import { Component } from "react";
-import { Dictionary, Sweep } from "../mp/sdk";
-import { distance } from "./utils";
+import { Component } from 'react';
+import { Dictionary, Sweep } from '../mp/sdk';
+import './Menu.css';
+import { distance } from './utils';
 
 interface MenuProps {
   currSweepId?: string;

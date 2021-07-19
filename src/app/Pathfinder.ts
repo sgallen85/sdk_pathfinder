@@ -62,15 +62,15 @@ export default class Pathfinder {
    * Heuristic function for A*. Just take Euclidean distance.
    */
   private heuristic(i_sid: string, j_sid: string): number {
-    const sweepPositions = this.sweepPositions;
-    return distance(this.sweepPositions[i_sid], this.sweepPositions[j_sid]);
+    const { sweepPositions } = this;
+    return distance(sweepPositions[i_sid], sweepPositions[j_sid]);
   }
 
   /**
    * Additional penalty to avoid large vertical/horizontal jumps.
    */
   private penalty(i_sid: string, j_sid: string): number {
-    const sweepPositions = this.sweepPositions;
+    const { sweepPositions } = this;
     return ((sweepPositions[i_sid].y - sweepPositions[j_sid].y) / this.VERT_THRESHOLD) ** 4
       + (((sweepPositions[i_sid].x - sweepPositions[j_sid].x) ** 2 + (sweepPositions[i_sid].z - sweepPositions[j_sid].z) ** 2) / this.HORZ_THRESHOLD);
   }
