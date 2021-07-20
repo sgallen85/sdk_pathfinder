@@ -97,7 +97,6 @@ export default class App extends Component<{}, AppState> {
 
   componentDidUpdate() {
     this.handlePath();
-    console.log('updated');
   }
 
   private onOptionSelect = (id: string) => {
@@ -155,7 +154,7 @@ export default class App extends Component<{}, AppState> {
 
   public render() {
 
-    const { currSweepId, sweepData } = this.state;
+    const { currSweepId, selectedSweepId, sweepData } = this.state;
     return (
       <div className='app'>
         <Frame src={this.src} />
@@ -165,6 +164,7 @@ export default class App extends Component<{}, AppState> {
         </div>
         <Menu
           currSweepId={currSweepId}
+          selectedSweepId={selectedSweepId}
           sweepData={sweepData}
           onChange={this.onOptionSelect}
         />

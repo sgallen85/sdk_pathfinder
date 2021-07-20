@@ -1,10 +1,9 @@
 import { Component } from 'react';
-import { Dictionary, Sweep } from '../mp/sdk';
+import { Sweep } from '../mp/sdk';
 import './Menu.scss';
 import Accordion from './reusables/accordion/Accordion';
 import AccordionGroup from './reusables/accordion/AccordionGroup';
 import AccordionItem from './reusables/accordion/AccordionItem';
-import { distance } from './utils';
 
 interface MenuProps {
   currSweepId?: string;
@@ -14,12 +13,11 @@ interface MenuProps {
 }
 
 interface MenuState {
-  options: OptionsObject[];
+  sweepGroups: SweepGroups;
 }
 
-interface OptionsObject {
-  id: string;
-  distance?: number;
+interface SweepGroups {
+  [group: string]: Sweep.SweepData[];
 }
 
 /**
@@ -27,86 +25,67 @@ interface OptionsObject {
  */
 export default class Menu extends Component<MenuProps, MenuState> {
 
-  private sweeps: Dictionary<Sweep.SweepData> = {}; // more convenient form of sweep data
-
   constructor(props: any) {
     super(props);
     this.state = {
-      options: [],
+      sweepGroups: {},
     };
   }
 
-  public componentDidUpdate(prevProps: MenuProps) {
-    // only do if props change
-    if (prevProps !== this.props) {
-      this.props.sweepData.map(s => this.sweeps[s.sid] = s);
-      this.getOptions().then((options) => {
-        this.setState({
-          options: options,
-        });
-      });
+  private getGroups() {
+    const { sweepData } = this.props;
+    const groups: SweepGroups = {};
+    for (const s of sweepData) {
+      const floor = '' + s.floor;
+      if (!(floor in groups)) {
+        groups[floor] = [];
+      }
+      groups[floor].push(s);
     }
+    return groups;
   }
 
-  private async getOptions() {
-    const { currSweepId } = this.props;
-    const { sweeps } = this;
-    // add new data
-    const optionsList: OptionsObject[] = [];
-    for (const id of Object.keys(sweeps)) {
-        let dist: number | undefined;
-        if (currSweepId) {
-            const dest = sweeps[id].position;
-            dist = distance(sweeps[currSweepId].position, dest);
-        }
-        optionsList.push({ id: id, distance: dist });
-    }
-    // if (currSweepId) {
-    //     // sort ascending distance
-    //     optionsList.sort((a, b) => {
-    //       if (a.distance && b.distance)
-    //         return a.distance - b.distance;
-    //       return a.id.localeCompare(b.id);
-    //     });
-    // }
-    return optionsList;
-  }
-
-  private renderItem(o: OptionsObject) {
-    const { onChange } = this.props;
+  private renderItem(s: Sweep.SweepData) {
+    const { onChange, selectedSweepId } = this.props;
+    const { sid } = s;
     return (
       <AccordionItem
-        header={o.id}
-        body={o.distance ? Math.round(o.distance) + 'm' : undefined}
-        onClick={() => onChange(o.id)}
+        header={sid}
+        onClick={() => onChange(sid)}
+        selected={sid === selectedSweepId}
       />
     );
   }
 
   private renderGroups() {
-    const { options } = this.state;
-    const groups = [];
+    const sweepGroups = this.getGroups();
+    const groups: any = [];
 
-    const items = [];
-    for (const elt of options) {
-      items.push(this.renderItem(elt));
+    for (const [group, sweeps] of Object.entries(sweepGroups)) {
+      if (!(group in groups)) groups[group] = [];
+      
+      const items = []
+      for (const s of sweeps) {
+        items.push(this.renderItem(s));
+      }
+
+      groups.push(
+        <AccordionGroup
+          header={`Floor ${group}`}
+          expanded={false}
+        >
+          {items}
+        </AccordionGroup>
+      );
     }
-
-    return (
-      <AccordionGroup
-        header={`All Sweeps`}
-        expanded={true}
-      >
-        {items}
-      </AccordionGroup>
-    );
+    return groups;
   }
   
   public render() {
-    const { options } = this.state;
+    const { sweepData } = this.props;
     return (
       <div className='menu'>
-        <Accordion header={`Sweeps (${options.length})`}>
+        <Accordion header={`Sweeps (${sweepData.length})`}>
           {this.renderGroups()}
         </Accordion>
       </div>

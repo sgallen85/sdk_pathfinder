@@ -4,6 +4,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 0 10px;
+    border-bottom: 2px solid rgb(80, 80, 80);
 
     background-color: rgb(255, 255, 255);
     font-weight: bold;
@@ -12,17 +13,21 @@
   }
 
   height: 100%;
-  overflow-y: scroll;
-  overflow-y: overlay;
 
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: rgb(136, 136, 136);
-    border-radius: 5px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
+  .accordion-groups {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-y: overlay;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(136, 136, 136);
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 }

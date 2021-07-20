@@ -15,7 +15,9 @@ export default class Accordion extends Component<AccordionProps> {
         { header &&
           <div className='accordion-header'>{header}</div>
         }
-        {children}
+        <div className='accordion-groups'>
+          {children}
+        </div>
       </div>
     );
   }

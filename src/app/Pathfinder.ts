@@ -85,8 +85,6 @@ export default class Pathfinder {
 
     const { graph } = this;
 
-    console.log(a_sid, b_sid);
-
     // check SIDs are valid
     if (graph[a_sid] === undefined || graph[b_sid] === undefined) {
       console.error('Sweep SID(s) is invalid.');
