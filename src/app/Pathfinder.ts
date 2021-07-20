@@ -34,7 +34,7 @@ export default class Pathfinder {
 
   constructor(sweepData: Sweep.SweepData[]) {
     // init sweepPositions
-    sweepData.map(sweep => this.sweepPositions[sweep.sid] = sweep.position);
+    sweepData.forEach(sweep => this.sweepPositions[sweep.sid] = sweep.position);
     this.createGraph(sweepData);
   }
 
