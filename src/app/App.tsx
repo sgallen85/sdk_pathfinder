@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { GetSDK } from '../mp/GetSDK';
 import { Dictionary, MpSdk, Sweep } from '../mp/sdk';
-import './App.css';
+import './App.scss';
 import Frame from './Frame';
 import Menu from './Menu';
 import Pathfinder from './Pathfinder';
@@ -97,11 +97,12 @@ export default class App extends Component<{}, AppState> {
 
   componentDidUpdate() {
     this.handlePath();
+    console.log('updated');
   }
 
-  private onOptionSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  private onOptionSelect = (id: string) => {
     this.setState({
-      selectedSweepId: e.currentTarget.value,
+      selectedSweepId: id,
     });
   }
 
@@ -158,15 +159,15 @@ export default class App extends Component<{}, AppState> {
     return (
       <div className='app'>
         <Frame src={this.src} />
-        <div>
+        <div className='fly-buttons'>
           <button onClick={() => this.startFly()}>Start Fly</button>
           <button onClick={() => this.endFly()}>End Fly</button>
-          <Menu
-            currSweepId={currSweepId}
-            sweepData={sweepData}
-            onChange={this.onOptionSelect}
-          />
         </div>
+        <Menu
+          currSweepId={currSweepId}
+          sweepData={sweepData}
+          onChange={this.onOptionSelect}
+        />
       </div>
     );
   }

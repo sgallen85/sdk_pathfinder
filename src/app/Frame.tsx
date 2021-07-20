@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Frame.css';
+import './Frame.scss';
 
 interface Props {
   src: string;

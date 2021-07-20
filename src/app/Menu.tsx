@@ -1,17 +1,20 @@
 import { Component } from 'react';
 import { Dictionary, Sweep } from '../mp/sdk';
-import './Menu.css';
+import './Menu.scss';
+import Accordion from './reusables/accordion/Accordion';
+import AccordionGroup from './reusables/accordion/AccordionGroup';
+import AccordionItem from './reusables/accordion/AccordionItem';
 import { distance } from './utils';
 
 interface MenuProps {
   currSweepId?: string;
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[];
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (e: any) => void;
 }
 
 interface MenuState {
-  optionsElements: JSX.Element[];
+  options: OptionsObject[];
 }
 
 interface OptionsObject {
@@ -29,7 +32,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      optionsElements: [],
+      options: [],
     };
   }
 
@@ -37,15 +40,15 @@ export default class Menu extends Component<MenuProps, MenuState> {
     // only do if props change
     if (prevProps !== this.props) {
       this.props.sweepData.map(s => this.sweeps[s.sid] = s);
-      this.renderOptions().then((options) => {
+      this.getOptions().then((options) => {
         this.setState({
-          optionsElements: options,
+          options: options,
         });
       });
     }
   }
 
-  private async renderOptions() {
+  private async getOptions() {
     const { currSweepId } = this.props;
     const { sweeps } = this;
     // add new data
@@ -66,24 +69,46 @@ export default class Menu extends Component<MenuProps, MenuState> {
     //       return a.id.localeCompare(b.id);
     //     });
     // }
-    return optionsList.map(o => {
-      return (
-        <option key={o.id} value={o.id}>
-          {o.id + (o.distance ? ` (${Math.round(o.distance)}m)` : '')}
-        </option>
-      );
-    });
+    return optionsList;
+  }
+
+  private renderItem(o: OptionsObject) {
+    const { onChange } = this.props;
+    return (
+      <AccordionItem
+        header={o.id}
+        body={o.distance ? Math.round(o.distance) + 'm' : undefined}
+        onClick={() => onChange(o.id)}
+      />
+    );
+  }
+
+  private renderGroups() {
+    const { options } = this.state;
+    const groups = [];
+
+    const items = [];
+    for (const elt of options) {
+      items.push(this.renderItem(elt));
+    }
+
+    return (
+      <AccordionGroup
+        header={`All Sweeps`}
+        expanded={true}
+      >
+        {items}
+      </AccordionGroup>
+    );
   }
   
   public render() {
-    const { selectedSweepId, onChange } = this.props;
-    const { optionsElements } = this.state;
+    const { options } = this.state;
     return (
-      <div className="menu">
-        <select onChange={onChange} value={selectedSweepId}>
-          <option value=''>--</option>
-          {optionsElements}
-        </select>
+      <div className='menu'>
+        <Accordion header={`Sweeps (${options.length})`}>
+          {this.renderGroups()}
+        </Accordion>
       </div>
     );
   }

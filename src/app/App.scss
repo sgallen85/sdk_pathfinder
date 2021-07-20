@@ -1,0 +1,14 @@
+.app {
+  height: 100vh;
+  display: flex;
+
+  // for some reason the accordion groups would extend a little past the bottom
+  // so this is a hacky fix
+  overflow: hidden;
+
+  .fly-buttons {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+}

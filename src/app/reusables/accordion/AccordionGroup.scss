@@ -1,0 +1,19 @@
+.accordion-group-container {
+  .accordion-group-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    height: 32px;
+    padding: 0 10px;
+    background-color: rgb(221, 221, 221);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .accordion-group {
+    transition: height 250ms ease;
+    overflow: hidden;
+  }
+}
