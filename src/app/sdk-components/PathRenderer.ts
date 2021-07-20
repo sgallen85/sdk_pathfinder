@@ -1,4 +1,5 @@
-import { Color, Vector3 } from "../../mp/sdk";
+import { Color, Vector3 } from '../../mp/sdk';
+import { distance } from '../utils';
 
 interface PathRendererInputs {
   visible: boolean;
@@ -13,6 +14,7 @@ interface PathRendererInputs {
 interface PathRendererOutputs {
   objectRoot: any;
   curve: any;
+  distance: number;
 }
 
 class PathRenderer {
@@ -25,7 +27,7 @@ class PathRenderer {
     radius: 0.15,
     color: 0x00ff00,
     opacity: 0.5,
-    heightOffset: -1,
+    heightOffset: -1.1,
     stepMultiplier: 5,
   };
 
@@ -33,6 +35,7 @@ class PathRenderer {
 
   private outputs = {
     curve: null,
+    distance: 0,
   } as PathRendererOutputs;
 
   public onInit = async () => {
@@ -49,7 +52,13 @@ class PathRenderer {
     // check if path is long enough and no undefined points
     if (path.length < 2 || !path.every(p => !!p)) return;
     
-    const points = path.map(p => new THREE.Vector3(p.x, p.y+heightOffset, p.z));
+    let d = 0;
+    const points = path.map((p, i) => {
+      if (i > 0) {
+        d += distance(path[i-1], p);
+      }
+      return new THREE.Vector3(p.x, p.y+heightOffset, p.z);
+    });
     const spline = new THREE.CatmullRomCurve3(points);
 
     const extrudeSettings = {
@@ -73,6 +82,7 @@ class PathRenderer {
 
     this.outputs.objectRoot = pathMesh;
     this.outputs.curve = spline;
+    this.outputs.distance = d;
   };
 
   public onEvent = function(_type: any, _data: any) {
