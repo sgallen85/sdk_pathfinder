@@ -1,14 +1,15 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { GetSDK } from '../mp/GetSDK';
 import { Dictionary, MpSdk, Sweep } from '../mp/sdk';
 import './App.scss';
 import Frame from './Frame';
-import Menu from './Menu';
+import Menu from './ui/Menu';
 import Pathfinder from './Pathfinder';
 import { initComponents } from './sdk-components';
 import { pathRendererType } from './sdk-components/PathRenderer';
 import { cameraControllerType } from './sdk-components/CameraController';
 import { sweepIdToPoint } from './utils';
+import MenuButton from './ui/MenuButton';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -19,6 +20,7 @@ interface AppState {
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[]; // put in state because changes should trigger rerender
   sweepMap?: Dictionary<MpSdk.Sweep.ObservableSweepData>;
+  menuEnabled: boolean;
 }
 
 const defaultUrlParams: any = {
@@ -42,6 +44,7 @@ export default class App extends Component<{}, AppState> {
 
   private src: string; // the url source for the sdk
   private sdk?: Sdk;
+  private frameRef = React.createRef<HTMLIFrameElement>();
 
   private pathNode: any; // the node for the PathRenderer component
   private path: any; // PathRenderer component. Needed for CameraController.
@@ -56,9 +59,14 @@ export default class App extends Component<{}, AppState> {
 
     this.state = {
       sweepData: [],
+      menuEnabled: true,
     };
   }
 
+  /**
+   * Parses the current url params and combines them with the default params, updating when necessary.
+   * @returns url param query string (without `?`), ready to be pasted directly into the url
+   */
   private handleUrlParams(): string {
     const params = new URLSearchParams(window.location.search);
     for (const [k, v] of Object.entries(defaultUrlParams)) {
@@ -125,7 +133,7 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
-  private async startFly() {
+  private startFly = async () => {
     const { sdk, path } = this;
 
     if (sdk && path) {
@@ -144,7 +152,7 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
-  private async endFly() {
+  private endFly = async () => {
     const { sdk, flyNode } = this;
     if (sdk && flyNode) {
       flyNode.stop();
@@ -152,22 +160,34 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
-  public render() {
+  private toggleMenu = () => {
+    this.setState({
+      menuEnabled: !this.state.menuEnabled,
+    });
+  }
 
-    const { currSweepId, selectedSweepId, sweepData } = this.state;
+  public render() {
+    const { currSweepId, selectedSweepId, sweepData, menuEnabled } = this.state;
+
     return (
       <div className='app'>
-        <Frame src={this.src} />
+        <Frame src={this.src} customRef={this.frameRef} />
         <div className='fly-buttons'>
-          <button onClick={() => this.startFly()}>Start Fly</button>
-          <button onClick={() => this.endFly()}>End Fly</button>
+          <button onClick={this.startFly}>Start Fly</button>
+          <button onClick={this.endFly}>End Fly</button>
         </div>
-        <Menu
-          currSweepId={currSweepId}
-          selectedSweepId={selectedSweepId}
-          sweepData={sweepData}
-          onChange={this.onOptionSelect}
-        />
+        { !menuEnabled &&
+          <MenuButton onClick={this.toggleMenu} />
+        }
+        { menuEnabled &&
+          <Menu
+            currSweepId={currSweepId}
+            selectedSweepId={selectedSweepId}
+            sweepData={sweepData}
+            onChange={this.onOptionSelect}
+            onClose={this.toggleMenu}
+          />
+        }
       </div>
     );
   }

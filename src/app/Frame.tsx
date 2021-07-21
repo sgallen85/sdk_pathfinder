@@ -4,6 +4,7 @@ import './Frame.scss';
 interface Props {
   src: string;
   id?: string;
+  customRef?: React.RefObject<HTMLIFrameElement>
 }
 
 /**
@@ -11,15 +12,17 @@ interface Props {
  */
 export default class Frame extends Component<Props, {}> {
   render() {
+    const { src, id, customRef } = this.props;
     return (
       <div className='frame'>
         <iframe
-          id={this.props.id || 'showcase'}
+          id={id || 'showcase'}
           className='frame'
-          src={this.props.src}
+          src={src}
           title={'showcase'}
           allowFullScreen={true}
           frameBorder='0'
+          ref={customRef}
         >
         </iframe>
       </div>

@@ -52,9 +52,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
           onClick={this.onClick}
         >
           {'' + header + (hasChildren ? ` (${numChildren})` : '')}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="accordion-icon icon-chevron-down" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-          </svg>
+          <img src={process.env.PUBLIC_URL + '/icons/chevron-down.svg'} className='accordion-icon icon-chevron-down' alt={'Toggle accordion group'} />
         </div>
         <div
           className={classNames('accordion-group', {
