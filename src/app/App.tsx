@@ -100,10 +100,10 @@ export default class App extends Component<{}, AppState> {
     var mattertags = [
       {
         label: "Sever Hall",
-        description: `Sever Hall is an academic building at Harvard University designed by the 
-          American architect H. H. Richardson and built in the late 1870s. It is located in 
-          Harvard Yard in Cambridge, Massachusetts. It was designated a National Historic Landmark 
-          in 1970, recognized as one of Richardson's mature masterpieces`,
+        description: "Sever Hall is an academic building at Harvard University designed " +
+          "by the American architect H. H. Richardson and built in the late 1870s. It is " +
+          "located in Harvard Yard in Cambridge, Massachusetts. It was designated a National " +
+          "Historic Landmark in 1970, recognized as one of Richardson's mature masterpieces.",
         anchorPosition: { x: -17.89, y: -4.22, z: -7.32},
         stemVector: { x: 0, y: 1, z: 0 },
       },
