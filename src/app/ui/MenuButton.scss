@@ -1,0 +1,25 @@
+.menu-button-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  height: 34px;
+
+  button.menu-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    height: 100%;
+
+    transition: all 250ms ease;
+
+    img.icon-chevron-down {
+      height: 100%;
+      filter: invert(1);
+      transform: rotate(90deg);
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}
