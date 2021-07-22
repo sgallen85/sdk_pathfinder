@@ -4,12 +4,13 @@ import { Dictionary, MpSdk, Sweep } from '../mp/sdk';
 import './App.scss';
 import Frame from './Frame';
 import Menu from './ui/Menu';
+import MenuButton from './ui/MenuButton';
 import Pathfinder from './Pathfinder';
 import { initComponents } from './sdk-components';
 import { pathRendererType } from './sdk-components/PathRenderer';
 import { cameraControllerType } from './sdk-components/CameraController';
 import { sweepIdToPoint } from './utils';
-import MenuButton from './ui/MenuButton';
+import { SweepAlias, sweepAliases } from './sweepAliases';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -24,7 +25,7 @@ interface AppState {
 }
 
 const defaultUrlParams: any = {
-  m: 'opSBz3SgMg3',
+  m: 'GycExKiYVFp',
   applicationKey: 'q44m20q8yk81yi0qgixrremda',
   title: '0',
   qs: '1',
@@ -41,7 +42,6 @@ const defaultUrlParams: any = {
  */
 export default class App extends Component<{}, AppState> {
 
-
   private src: string; // the url source for the sdk
   private sdk?: Sdk;
   private frameRef = React.createRef<HTMLIFrameElement>();
@@ -49,6 +49,8 @@ export default class App extends Component<{}, AppState> {
   private pathNode: any; // the node for the PathRenderer component
   private path: any; // PathRenderer component. Needed for CameraController.
   private pathfinder?: Pathfinder;
+
+  private sweepAlias?: SweepAlias; // human-readable alias for sweeps, if available
 
   private flyNode: any; // the node for the CameraController component
 
@@ -77,15 +79,20 @@ export default class App extends Component<{}, AppState> {
     return params.toString();
   }
 
+  // --- React methods ---------------------------------------------------------
+
   public async componentDidMount() {
     
     this.sdk = await GetSDK('showcase', defaultUrlParams.applicationKey);
     await initComponents(this.sdk);
 
-    const sweepData = (await this.sdk.Model.getData()).sweeps;
-    this.pathfinder = new Pathfinder(sweepData);
-    this.setState({
-      sweepData: sweepData,
+    this.sdk.Model.getData().then( (data) => {
+      const sweepData = data.sweeps;
+      this.pathfinder = new Pathfinder(sweepData);
+      this.setState({
+        sweepData: sweepData,
+      });
+      this.sweepAlias = sweepAliases[data.sid];
     });
 
     this.sdk.Sweep.data.subscribe({
@@ -97,6 +104,7 @@ export default class App extends Component<{}, AppState> {
     });
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
+      //console.log(currentSweep.sid);
       this.setState({
         currSweepId: currentSweep.sid,
       });
@@ -106,6 +114,8 @@ export default class App extends Component<{}, AppState> {
   componentDidUpdate() {
     this.handlePath();
   }
+
+  // --- SDK methods -----------------------------------------------------------
 
   private onOptionSelect = (id: string) => {
     this.setState({
@@ -166,6 +176,8 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
+  // --- Render ----------------------------------------------------------------
+
   public render() {
     const { currSweepId, selectedSweepId, sweepData, menuEnabled } = this.state;
 
@@ -184,6 +196,7 @@ export default class App extends Component<{}, AppState> {
             currSweepId={currSweepId}
             selectedSweepId={selectedSweepId}
             sweepData={sweepData}
+            sweepAlias={this.sweepAlias}
             onChange={this.onOptionSelect}
             onClose={this.toggleMenu}
           />

@@ -4,11 +4,13 @@ import './Menu.scss';
 import Accordion from '../reusables/accordion/Accordion';
 import AccordionGroup from '../reusables/accordion/AccordionGroup';
 import AccordionItem from '../reusables/accordion/AccordionItem';
+import { SweepAlias } from '../sweepAliases';
 
 interface MenuProps {
   currSweepId?: string;
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[];
+  sweepAlias?: SweepAlias;
   onChange: (e: any) => void;
   onClose?: () => void;
 }
@@ -34,9 +36,10 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
 
   private getGroups() {
-    const { sweepData } = this.props;
+    const { sweepData, sweepAlias } = this.props;
     const groups: SweepGroups = {};
     for (const s of sweepData) {
+      if (sweepAlias && !(s.sid in sweepAlias)) continue; // skip sweeps without alias, if available
       const floor = '' + s.floor;
       if (!(floor in groups)) {
         groups[floor] = [];
@@ -47,11 +50,12 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
 
   private renderItem(s: Sweep.SweepData) {
-    const { onChange, selectedSweepId } = this.props;
+    const { onChange, selectedSweepId, sweepAlias } = this.props;
     const { sid } = s;
+    const name = sweepAlias ? sweepAlias[sid] : sid; // replace sid with alias, if available
     return (
       <AccordionItem
-        header={sid}
+        header={name}
         onClick={() => onChange(sid)}
         selected={sid === selectedSweepId}
       />
