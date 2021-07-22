@@ -9,7 +9,7 @@ interface AccordionItemProps {
   onClick?: (e: any) => void;
 }
 
-export const ACCORDION_ITEM_HEIGHT = '40px';
+export const ACCORDION_ITEM_HEIGHT = '44px';
 
 export default class AccordionItem extends Component<AccordionItemProps> {
   public render() {

@@ -6,6 +6,7 @@ import { ACCORDION_ITEM_HEIGHT } from './AccordionItem';
 interface AccordionGroupProps {
   header?: string;
   expanded?: boolean;
+  showNumber?: boolean;
 }
 
 interface AccordionGroupState {
@@ -31,7 +32,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
   }
   
   public render() {
-    const { children, header } = this.props;
+    const { children, header, showNumber } = this.props;
     const { expanded } = this.state;
 
     let numChildren = 0;
@@ -51,7 +52,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
           className='accordion-group-header'
           onClick={this.onClick}
         >
-          {'' + header + (hasChildren ? ` (${numChildren})` : '')}
+          {'' + header + (hasChildren && showNumber ? ` (${numChildren})` : '')}
           <img src={process.env.PUBLIC_URL + '/icons/chevron-down.svg'} className='accordion-icon icon-chevron-down' alt={'Toggle accordion group'} />
         </div>
         <div

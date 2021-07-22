@@ -87,6 +87,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
         <AccordionGroup
           header={`Floor ${floor}`}
           expanded={!!selectedFloor && ''+selectedFloor === floor}
+          showNumber={true}
         >
           {items}
         </AccordionGroup>
@@ -96,11 +97,11 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
   
   public render() {
-    const { sweepData, onClose } = this.props;
+    const { onClose } = this.props;
     return (
       <div className='menu'>
         <div className='menu-header'>
-          <div className='menu-header-text'>{`Sweeps (${sweepData.length})`}</div>
+          <div className='menu-header-text'>{`Sweeps`}</div>
           { onClose &&
             <button type='button' className='menu-close-button' onClick={onClose}>
               <img src={process.env.PUBLIC_URL + '/icons/x-lg.svg'} className=' icon-x-lg' alt='Close' />

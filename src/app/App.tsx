@@ -109,6 +109,8 @@ export default class App extends Component<{}, AppState> {
         currSweepId: currentSweep.sid,
       });
     });
+
+    console.log(await this.sdk.Scene.query(['model'])[0]);
   }
 
   componentDidUpdate() {
