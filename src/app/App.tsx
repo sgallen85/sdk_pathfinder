@@ -203,15 +203,16 @@ export default class App extends Component<{}, AppState> {
 
   private startFly = async () => {
     const { sdk } = this;
-    const { path } = this.state;
+    const { path, flyModeEnabled } = this.state;
 
     if (sdk && path) {
-      if (this.flyNode) { // resume current flythrough
-        this.camCon.inputs.enabled = true;
+      if (flyModeEnabled) { // resume current flythrough
+        this.resumeFly();
       } else { // start new flythrough
+        if (this.flyNode) this.flyNode.stop()
         this.flyNode = await sdk.Scene.createNode();
         this.camCon = this.flyNode.addComponent(cameraControllerType, {
-          onTickCallback: (u: number) => this.setState({flyU: u}),
+          onChangeU: (u: number) => this.setState({flyU: u}),
         });
         const cam = this.flyNode.addComponent('mp.camera', {
           enabled: true,
@@ -219,6 +220,7 @@ export default class App extends Component<{}, AppState> {
         this.camCon.bind('curve', path, 'curve');
         cam.bind('camera', this.camCon, 'camera');
         this.flyNode.start();
+        this.setState({flyModeEnabled: true});
         // orient camera to start of flythrough
         const { position, rotation } = this.camCon.getPoseAt(0);
         await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
@@ -226,26 +228,23 @@ export default class App extends Component<{}, AppState> {
           rotation: {x: rotation.x*180/Math.PI, y: rotation.y*180/Math.PI},
         });
         // enable flythough
-        this.startFly();
+        this.resumeFly();
       }
     }
   }
 
-  private pauseFly = async () => {
-    const { camCon } = this;
-    if (camCon) {
-      camCon.inputs.enabled = false;
-    }
-  }
+  private resumeFly = () => {if (this.state.flyModeEnabled) this.camCon.inputs.enabled = true};
+  private pauseFly = () => {if (this.state.flyModeEnabled) this.camCon.inputs.enabled = false};
+  private setFly = (u: number) => {if (this.state.flyModeEnabled) this.camCon.setManualU(u)};
 
   private endFly = async () => {
     const { sdk, flyNode } = this;
     if (flyNode) {
       flyNode.stop();
-      this.flyNode = null;
+      this.setState({flyModeEnabled: false});
     }
     if (sdk) sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
-  }
+  };
 
   private toggleMenu = () => {
     this.setState({
@@ -287,6 +286,7 @@ export default class App extends Component<{}, AppState> {
       sweepData,
       menuEnabled,
       flyModeEnabled,
+      flyU,
       path,
     } = this.state;
 
@@ -300,12 +300,16 @@ export default class App extends Component<{}, AppState> {
               flyModeEnabled ?
               <ControlsOverlay
               onPlay={this.startFly}
-              onPause={this.endFly}
-              onExit={this.toggleFlyMode}
-              />
-              :
-              <FlyModeButton onClick={this.toggleFlyMode} />
-            )}
+              onPause={this.pauseFly}
+              onExit={this.endFly}
+            /> : null )}
+            { flyModeEnabled && <ScrubBar 
+              onMouseDown={this.pauseFly}
+              onMouseUp={this.resumeFly}
+              onChange={this.setFly}
+              u={flyU}
+            /> }
+          </div>
         </div>
         { !menuEnabled &&
           <MenuButton onClick={this.toggleMenu} />
@@ -321,7 +325,6 @@ export default class App extends Component<{}, AppState> {
           />
         }
         </div>
-      </div>
     );
   }
 }
