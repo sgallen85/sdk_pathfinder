@@ -97,37 +97,33 @@ export default class App extends Component<{}, AppState> {
       });
       this.sweepAlias = sweepAliases[data.sid];
 
-      // Add user-generated Mattertags to the default model
-      const mattertags = [];
-      if (this.sdk && data.sid === "GycExKiYVFp") {
-        mattertags.push(
-          {
-            label: "Sever Hall",
-            description: "Sever Hall is an academic building at Harvard University designed " +
-              "by the American architect H. H. Richardson and built in the late 1870s. It is " +
-              "located in Harvard Yard in Cambridge, Massachusetts. It was designated a National " +
-              "Historic Landmark in 1970, recognized as one of Richardson's mature masterpieces.",
-            anchorPosition: { x: -17.89, y: -4.22, z: -7.32},
-            stemVector: { x: 0, y: 1, z: 0 },
-          },
-        );
-        mattertags.push(
-          {
-            label: "1986 Bertone X1/9",
-            description: "This is a car.",
-            media: {
-              type: this.sdk.Mattertag.MediaType.PHOTO,
-              src: "https://bringatrailer.com/wp-content/uploads/2019/06/1986_bertone_x_19_156130493598764daBertone-19-e1563480607976.jpg?fit=940%2C626",
-            },
-            anchorPosition: { x: -17.89, y: -4.22, z: -6.32},
-            stemVector: { x: 0, y: 1, z: 0 },
-          }
-        );
-      }
       if (this.sdk) {
-        this.sdk.Mattertag.add(mattertags).then( () => {
-          this.translateMattertags();
-        });
+        // Add user-generated Mattertags to the default model
+        const mattertags = [];
+        if (data.sid === "GycExKiYVFp") {
+          mattertags.push(
+            {
+              label: "Revitalizing the Great Hall",
+              description: "Within the building’s Great Hall, new vestibule spaces were created to "+
+                "connect the main circulation corridor to new restrooms. Elevator lobbies and "+
+                "office suite entrances were treated as extensions of the original McKim design, "+
+                "with matching marble flooring and wall base, and stained oak millwork-encased "+
+                "openings. The installation of fire sprinklers throughout the building helped call "+
+                "attention to new opportunities for restoring spatial clarity; obsolete steel and "+
+                "wired glass partitions installed in the main corridor in the 1970s were removed, "+
+                "opening up the axial hallway to its original extents and further enhancing spatial "+
+                "connectivity.",
+              anchorPosition: {x: 16.55, y: 1.28-1.5, z: 6.69},
+              stemVector: { x: 0, y: 1, z: 0 },
+            }
+          );
+        }
+        // translate all existing + new mattertags
+        if (this.sdk) {
+          this.sdk.Mattertag.add(mattertags).then( () => {
+            this.translateMattertags();
+          });
+        }
       }
       
     });
@@ -141,7 +137,7 @@ export default class App extends Component<{}, AppState> {
     });
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
-      //console.log(currentSweep.sid);
+      console.log(currentSweep.sid, currentSweep.position);
       this.setState({
         currSweepId: currentSweep.sid,
       });
