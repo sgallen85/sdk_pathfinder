@@ -4,7 +4,7 @@ import './ScrubBar.scss';
 interface ScrubBarProps {
   onMouseDown: () => void,
   onMouseUp: () => void,
-  onChange: (u: number) => void,
+  onChange: (e: any) => void,
   u: any,
 }
 
@@ -24,7 +24,7 @@ export default class ScrubBar extends Component<ScrubBarProps, ScrubBarState> {
         <input className='control-bar' id='control-bar' type='range' min='0' max='1' step='0.001' value={u}
           onMouseDown={onMouseDown} 
           onMouseUp={onMouseUp} 
-          onChange={(e) => onChange(parseFloat(e.target.value))}
+          onChange={onChange}
         />
       </div>
     );

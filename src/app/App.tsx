@@ -14,7 +14,6 @@ import { sweepIdToPoint } from './utils';
 import { SweepAlias, sweepAliases } from './sweepAliases';
 import ControlsOverlay from './ui/overlay/ControlsOverlay';
 import FlyModeButton from './ui/overlay/FlyModeButton';
-import ScrubBar from './ui/overlay/ScrubBar';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -190,60 +189,54 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
-  private toggleFlyMode = () => {
-    this.setState(prevState => {
-      if (prevState.flyModeEnabled) {
-        this.endFly();
-      }
-      return {
-        flyModeEnabled: !prevState.flyModeEnabled,
-      }
-    });
+  private toggleFlyMode = async () => {
+    const { flyModeEnabled } = this.state;
+    if (flyModeEnabled) {
+      await this.exitFly();
+    } else {
+      await this.initFly();
+    }
+    this.setState({flyModeEnabled: !flyModeEnabled});
   }
 
-  private startFly = async () => {
+  private initFly = async () => {
     const { sdk } = this;
-    const { path, flyModeEnabled } = this.state;
+    const { path } = this.state;
 
     if (sdk && path) {
-      if (flyModeEnabled) { // resume current flythrough
-        this.resumeFly();
-      } else { // start new flythrough
-        if (this.flyNode) this.flyNode.stop()
-        this.flyNode = await sdk.Scene.createNode();
-        this.camCon = this.flyNode.addComponent(cameraControllerType, {
-          onChangeU: (u: number) => this.setState({flyU: u}),
-        });
-        const cam = this.flyNode.addComponent('mp.camera', {
-          enabled: true,
-        });
-        this.camCon.bind('curve', path, 'curve');
-        cam.bind('camera', this.camCon, 'camera');
-        this.flyNode.start();
-        this.setState({flyModeEnabled: true});
-        // orient camera to start of flythrough
-        const { position, rotation } = this.camCon.getPoseAt(0);
-        await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
-          position,
-          rotation: {x: rotation.x*180/Math.PI, y: rotation.y*180/Math.PI},
-        });
-        // enable flythough
-        this.resumeFly();
-      }
+      if (this.flyNode) this.flyNode.stop();
+      this.flyNode = await sdk.Scene.createNode();
+      this.camCon = this.flyNode.addComponent(cameraControllerType, {
+        changeUCallback: (u: number) => this.setState({flyU: u}),
+      });
+      const cam = this.flyNode.addComponent('mp.camera', {
+        enabled: true,
+      });
+      this.camCon.bind('curve', path, 'curve');
+      cam.bind('camera', this.camCon, 'camera');
+      this.flyNode.start();
+
+      // orient camera to start of flythrough
+      const { position, rotation } = this.camCon.getPoseAt(0);
+      await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
+        position,
+        rotation: {x: rotation.x*180/Math.PI, y: rotation.y*180/Math.PI},
+      });
+
+      // start flythough
+      this.playFly();
     }
   }
 
-  private resumeFly = () => {if (this.state.flyModeEnabled) this.camCon.inputs.enabled = true};
-  private pauseFly = () => {if (this.state.flyModeEnabled) this.camCon.inputs.enabled = false};
-  private setFly = (u: number) => {if (this.state.flyModeEnabled) this.camCon.setManualU(u)};
+  private playFly = () => {if (this.camCon) this.camCon.inputs.enabled = true};
+  private pauseFly = () => {if (this.camCon) this.camCon.inputs.enabled = false};
+  private setFlyU = (u: number) => {if (this.camCon) this.camCon.setU(u)};
 
-  private endFly = async () => {
+  private exitFly = async () => {
     const { sdk, flyNode } = this;
-    if (flyNode) {
-      flyNode.stop();
-      this.setState({flyModeEnabled: false});
-    }
+    if (flyNode) flyNode.stop();
     if (sdk) sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
+    this.setState({flyModeEnabled: false});
   };
 
   private toggleMenu = () => {
@@ -298,16 +291,14 @@ export default class App extends Component<{}, AppState> {
             { path && (
               flyModeEnabled ?
               <ControlsOverlay
-              onPlay={this.startFly}
+              onPlay={this.playFly}
               onPause={this.pauseFly}
-              onExit={this.endFly}
-            /> : null )}
-            { flyModeEnabled && <ScrubBar 
-              onMouseDown={this.pauseFly}
-              onMouseUp={this.resumeFly}
-              onChange={this.setFly}
+              onExit={this.exitFly}
+              setU={this.setFlyU}
               u={flyU}
-            /> }
+              /> 
+              : <FlyModeButton onClick={this.toggleFlyMode} />
+            )}
           </div>
         </div>
         { !menuEnabled &&

@@ -1,12 +1,15 @@
 import classNames from 'classnames';
 import { Component } from 'react';
 import Icon from '../../reusables/icon/Icon';
+import ScrubBar from './ScrubBar';
 import './ControlsOverlay.scss';
 
 interface ControlsOverlayProps {
   onPlay: () => void;
   onPause: () => void;
   onExit: () => void;
+  setU: (u: number) => void;
+  u: number;
 }
 
 enum ButtonOptions {
@@ -41,35 +44,44 @@ export default class ControlsOverlay extends Component<ControlsOverlayProps, Con
   }
 
   public render() {
-    const { onExit } = this.props;
+    const { onExit, setU, u } = this.props;
     const { selectedButton } = this.state;
 
     return (
-      <div className='controls-overlay'>
-        <button type='button'
-          className={classNames(
-            'control-button',
-            'play-button',
-            { 'selected': selectedButton === ButtonOptions.PLAY },
-          )}
-          onClick={this.onPlay}
-        >
-          <Icon icon='play' />
-        </button>
-        <button type='button'
-          className={classNames(
-            'control-button',
-            'pause-button',
-            { 'selected': selectedButton === ButtonOptions.PAUSE },
-          )}
-          onClick={this.onPause}
-        >
-          <Icon icon='stop' />
-        </button>
-        <button type='button' className='control-button exit-button' onClick={onExit}>
-          <Icon icon='close' />
-        </button>
+      <div>
+        <ScrubBar 
+          onMouseDown={this.onPause}
+          onMouseUp={this.onPlay}
+          onChange={(e) => setU(parseFloat(e.target.value))}
+          u={u}
+        />
+        <div className='controls-overlay'>
+          <button type='button'
+            className={classNames(
+              'control-button',
+              'play-button',
+              { 'selected': selectedButton === ButtonOptions.PLAY },
+            )}
+            onClick={this.onPlay}
+          >
+            <Icon icon='play' />
+          </button>
+          <button type='button'
+            className={classNames(
+              'control-button',
+              'pause-button',
+              { 'selected': selectedButton === ButtonOptions.PAUSE },
+            )}
+            onClick={this.onPause}
+          >
+            <Icon icon='stop' />
+          </button>
+          <button type='button' className='control-button exit-button' onClick={onExit}>
+            <Icon icon='close' />
+          </button>
+        </div>
       </div>
     );
+
   }
 }

@@ -12,7 +12,7 @@ interface CameraControllerInputs {
   speed: number, 
   verticalOffset: number, 
   enabled: boolean, 
-  onChangeU: (u: number) => void, 
+  changeUCallback: (u: number) => void, 
 }
 
 interface CameraControllerOutputs {
@@ -32,7 +32,7 @@ class CameraController {
     speed: 1.5, // speed in meters per second
     verticalOffset: 1., // vertical offset from curve
     enabled: false, // true to move forward automatically, false to pause
-    onChangeU: (u) => null, // callback eahc time u changes
+    changeUCallback: (u) => null, // callback eahc time u changes
   };
 
   private outputs = {
@@ -73,10 +73,10 @@ class CameraController {
   /**
    * Manually set u for camera.
    */
-  public setManualU(u: number) {
+  public setU(u: number) {
     const { position, rotation } = this.getPoseAt(u);
     this.setCamera(position, rotation);
-    this.inputs.onChangeU(u);
+    this.inputs.changeUCallback(u);
     this.uReference = u;
   }
 
@@ -108,10 +108,11 @@ class CameraController {
     const { speed, enabled } = this.inputs;
     if (enabled) {
       const deltaTime = (Date.now() - this.timeReference)/1000;
-      const u = Math.min(this.uReference + speed * deltaTime / this.length, 1); // clamp u less than 1
+      let u = this.uReference + speed * deltaTime / this.length; 
+      u = Math.min(Math.max(u, 0), 1); // clamp u into [0, 1]
       const { position, rotation } = this.getPoseAt(u);
       this.setCamera(position, rotation);
-      this.inputs.onChangeU(u);
+      this.inputs.changeUCallback(u);
       this.u = u;
     }
   };
