@@ -197,7 +197,7 @@ export default class App extends Component<{}, AppState> {
       await this.initFly();
     }
     this.setState({flyModeEnabled: !flyModeEnabled});
-  }
+  };
 
   private initFly = async () => {
     const { sdk } = this;
@@ -224,20 +224,20 @@ export default class App extends Component<{}, AppState> {
       });
 
       // start flythough
+      this.setState({flyU: 0});
       this.playFly();
     }
-  }
-
-  private playFly = () => {if (this.camCon) this.camCon.inputs.enabled = true};
-  private pauseFly = () => {if (this.camCon) this.camCon.inputs.enabled = false};
-  private setFlyU = (u: number) => {if (this.camCon) this.camCon.setU(u)};
+  };
 
   private exitFly = async () => {
     const { sdk, flyNode } = this;
     if (flyNode) flyNode.stop();
     if (sdk) sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
-    this.setState({flyModeEnabled: false});
   };
+
+  private playFly = () => {if (this.camCon) this.camCon.inputs.enabled = true};
+  private pauseFly = () => {if (this.camCon) this.camCon.inputs.enabled = false};
+  private setFlyU = (u: number) => {if (this.camCon) this.camCon.setU(u)};
 
   private toggleMenu = () => {
     this.setState({
@@ -293,7 +293,7 @@ export default class App extends Component<{}, AppState> {
               <ControlsOverlay
               onPlay={this.playFly}
               onPause={this.pauseFly}
-              onExit={this.exitFly}
+              onExit={this.toggleFlyMode}
               setU={this.setFlyU}
               u={flyU}
               /> 

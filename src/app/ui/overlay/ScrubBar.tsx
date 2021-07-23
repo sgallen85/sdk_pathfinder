@@ -20,8 +20,8 @@ export default class ScrubBar extends Component<ScrubBarProps, ScrubBarState> {
     //const path = process.env.PUBLIC_URL + '/icons/')
 
     return (
-      <div className='scrub-bar'>
-        <input className='control-bar' id='control-bar' type='range' min='0' max='1' step='0.001' value={u}
+      <div className='scrub-div'>
+        <input className='scrub-bar' type='range' min='0' max='1' step='0.001' value={u}
           onMouseDown={onMouseDown} 
           onMouseUp={onMouseUp} 
           onChange={onChange}
