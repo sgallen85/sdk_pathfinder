@@ -14,6 +14,7 @@ import { sweepIdToPoint } from './utils';
 import { SweepAlias, sweepAliases } from './sweepAliases';
 import ControlsOverlay from './ui/overlay/ControlsOverlay';
 import FlyModeButton from './ui/overlay/FlyModeButton';
+import ScrubBar from './ui/overlay/ScrubBar';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -27,6 +28,7 @@ interface AppState {
   path?: any; // put in state so path visibility updates trigger rerender
   menuEnabled: boolean;
   flyModeEnabled: boolean;
+  flyU: number; // integer in [0, 1] indicating position in flythrough
 }
 
 const defaultUrlParams: any = {
@@ -57,6 +59,7 @@ export default class App extends Component<{}, AppState> {
   private sweepAlias?: SweepAlias; // human-readable alias for sweeps, if available
 
   private flyNode: any; // the node for the CameraController component
+  private camCon: any; // CameraConroller component
 
   constructor(props: any) {
     super(props);
@@ -67,6 +70,7 @@ export default class App extends Component<{}, AppState> {
       sweepData: [],
       menuEnabled: true,
       flyModeEnabled: false,
+      flyU: 0,
     };
   }
 
@@ -140,7 +144,7 @@ export default class App extends Component<{}, AppState> {
     });
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
-      console.log(currentSweep.sid, currentSweep.position);
+      if (currentSweep.sid) console.log(currentSweep.sid, currentSweep.position);
       this.setState({
         currSweepId: currentSweep.sid,
       });
@@ -189,7 +193,7 @@ export default class App extends Component<{}, AppState> {
   private toggleFlyMode = () => {
     this.setState(prevState => {
       if (prevState.flyModeEnabled) {
-        this.exitFly();
+        this.endFly();
       }
       return {
         flyModeEnabled: !prevState.flyModeEnabled,
@@ -202,34 +206,45 @@ export default class App extends Component<{}, AppState> {
     const { path } = this.state;
 
     if (sdk && path) {
-        this.endFly();
+      if (this.flyNode) { // resume current flythrough
+        this.camCon.inputs.enabled = true;
+      } else { // start new flythrough
         this.flyNode = await sdk.Scene.createNode();
-        const camCon = await this.flyNode.addComponent(cameraControllerType);
+        this.camCon = this.flyNode.addComponent(cameraControllerType, {
+          onTickCallback: (u: number) => this.setState({flyU: u}),
+        });
         const cam = this.flyNode.addComponent('mp.camera', {
-            enabled: true,
+          enabled: true,
         });
-        camCon.bind('curve', path, 'curve');
-        cam.bind('camera', camCon, 'camera');
-        await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
-          transition: sdk.Mode.TransitionType.INSTANT,
-        });
+        this.camCon.bind('curve', path, 'curve');
+        cam.bind('camera', this.camCon, 'camera');
         this.flyNode.start();
+        // orient camera to start of flythrough
+        const { position, rotation } = this.camCon.getPoseAt(0);
+        await sdk.Mode.moveTo(sdk.Mode.Mode.DOLLHOUSE, {
+          position,
+          rotation: {x: rotation.x*180/Math.PI, y: rotation.y*180/Math.PI},
+        });
+        // enable flythough
+        this.startFly();
+      }
+    }
+  }
+
+  private pauseFly = async () => {
+    const { camCon } = this;
+    if (camCon) {
+      camCon.inputs.enabled = false;
     }
   }
 
   private endFly = async () => {
     const { sdk, flyNode } = this;
-    if (sdk && flyNode) {
+    if (flyNode) {
       flyNode.stop();
-      //await sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
+      this.flyNode = null;
     }
-  }
-
-  private exitFly = async () => {
-    const { sdk } = this;
-    if (!sdk) return;
-    await this.endFly();
-    await sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
+    if (sdk) sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
   }
 
   private toggleMenu = () => {
@@ -291,7 +306,6 @@ export default class App extends Component<{}, AppState> {
               :
               <FlyModeButton onClick={this.toggleFlyMode} />
             )}
-          </div>
         </div>
         { !menuEnabled &&
           <MenuButton onClick={this.toggleMenu} />
@@ -306,6 +320,7 @@ export default class App extends Component<{}, AppState> {
             onClose={this.toggleMenu}
           />
         }
+        </div>
       </div>
     );
   }
