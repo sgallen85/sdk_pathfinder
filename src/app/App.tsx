@@ -24,7 +24,7 @@ interface AppState {
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[]; // put in state because changes should trigger rerender
   sweepMap?: Dictionary<MpSdk.Sweep.ObservableSweepData>;
-  path?: any; // put in state so path updates trigger rerender
+  path?: any; // put in state so path visibility updates trigger rerender
   menuEnabled: boolean;
   flyModeEnabled: boolean;
 }
@@ -52,7 +52,6 @@ export default class App extends Component<{}, AppState> {
   private sdk?: Sdk;
 
   private pathNode: any; // the node for the PathRenderer component
-  private path: any; // PathRenderer component. Needed for CameraController.
   private pathfinder?: Pathfinder;
 
   private sweepAlias?: SweepAlias; // human-readable alias for sweeps, if available
@@ -174,14 +173,15 @@ export default class App extends Component<{}, AppState> {
       if (!path) return;
       if (this.pathNode) this.pathNode.stop();
       this.pathNode = await sdk.Scene.createNode();
-      this.path = this.pathNode.addComponent(pathRendererType, {
-        path: path.map(id => sweepIdToPoint(id, sweepMap)),
-        opacity: 0.7,
-        radius: 0.12,
-        stepMultiplier: 10,
-        color: 0x8df763,
+      this.setState ({
+        path: this.pathNode.addComponent(pathRendererType, {
+          path: path.map(id => sweepIdToPoint(id, sweepMap)),
+          opacity: 0.7,
+          radius: 0.12,
+          stepMultiplier: 10,
+          color: 0x8df763,
+        })
       });
-      this.setState({path: this.path});
       this.pathNode.start();
     }
   }
@@ -198,7 +198,8 @@ export default class App extends Component<{}, AppState> {
   }
 
   private startFly = async () => {
-    const { sdk, path } = this;
+    const { sdk } = this;
+    const { path } = this.state;
 
     if (sdk && path) {
         this.endFly();
