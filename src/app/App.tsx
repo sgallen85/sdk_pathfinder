@@ -96,37 +96,40 @@ export default class App extends Component<{}, AppState> {
         sweepData: sweepData,
       });
       this.sweepAlias = sweepAliases[data.sid];
-    // pretend these are user-created Mattertags
-    var mattertags = [
-      {
-        label: "Sever Hall",
-        description: "Sever Hall is an academic building at Harvard University designed " +
-          "by the American architect H. H. Richardson and built in the late 1870s. It is " +
-          "located in Harvard Yard in Cambridge, Massachusetts. It was designated a National " +
-          "Historic Landmark in 1970, recognized as one of Richardson's mature masterpieces.",
-        anchorPosition: { x: -17.89, y: -4.22, z: -7.32},
-        stemVector: { x: 0, y: 1, z: 0 },
-      },
-      {
-        label: "1986 Bertone X1/9",
-        description: "This is a car.",
-        media: {
-          type: this.sdk.Mattertag.MediaType.PHOTO,
-          src: "https://bringatrailer.com/wp-content/uploads/2019/06/1986_bertone_x_19_156130493598764daBertone-19-e1563480607976.jpg?fit=940%2C626",
-        },
-        anchorPosition: { x: -17.89, y: -4.22, z: -6.32},
-        stemVector: { x: 0, y: 1, z: 0 },
+
+      // Add user-generated Mattertags to the default model
+      const mattertags = [];
+      if (this.sdk && data.sid === "GycExKiYVFp") {
+        mattertags.push(
+          {
+            label: "Sever Hall",
+            description: "Sever Hall is an academic building at Harvard University designed " +
+              "by the American architect H. H. Richardson and built in the late 1870s. It is " +
+              "located in Harvard Yard in Cambridge, Massachusetts. It was designated a National " +
+              "Historic Landmark in 1970, recognized as one of Richardson's mature masterpieces.",
+            anchorPosition: { x: -17.89, y: -4.22, z: -7.32},
+            stemVector: { x: 0, y: 1, z: 0 },
+          },
+        );
+        mattertags.push(
+          {
+            label: "1986 Bertone X1/9",
+            description: "This is a car.",
+            media: {
+              type: this.sdk.Mattertag.MediaType.PHOTO,
+              src: "https://bringatrailer.com/wp-content/uploads/2019/06/1986_bertone_x_19_156130493598764daBertone-19-e1563480607976.jpg?fit=940%2C626",
+            },
+            anchorPosition: { x: -17.89, y: -4.22, z: -6.32},
+            stemVector: { x: 0, y: 1, z: 0 },
+          }
+        );
       }
-    ];
-    await this.sdk.Mattertag.add(mattertags);
-
-    // translate Mattertags
-    this.translateMattertags();
-
-    const sweepData = (await this.sdk.Model.getData()).sweeps;
-    this.pathfinder = new Pathfinder(sweepData);
-    this.setState({
-      sweepData: sweepData,
+      if (this.sdk) {
+        this.sdk.Mattertag.add(mattertags).then( () => {
+          this.translateMattertags();
+        });
+      }
+      
     });
 
     this.sdk.Sweep.data.subscribe({
@@ -217,15 +220,13 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
-  // --- Render ----------------------------------------------------------------
-
   /**
    * TODO: make entirely async
    */
 
-  private async translateMattertags() {
+   private async translateMattertags() {
     const { sdk, lang } = this;
-    
+
     if (sdk && lang) {
       const Trans = new Translator(lang);
       if (Trans.testQuery()) { // check HTTP request works
@@ -243,6 +244,8 @@ export default class App extends Component<{}, AppState> {
       Trans.checkUsage();
     }
   }
+
+  // --- Render ----------------------------------------------------------------
 
   public render() {
     const { currSweepId, selectedSweepId, sweepData, menuEnabled } = this.state;
