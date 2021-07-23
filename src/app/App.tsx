@@ -6,6 +6,7 @@ import Frame from './Frame';
 import Menu from './ui/Menu';
 import MenuButton from './ui/MenuButton';
 import Pathfinder from './Pathfinder';
+import Translator from './Translator';
 import { initComponents } from './sdk-components';
 import { pathRendererType } from './sdk-components/PathRenderer';
 import { cameraControllerType } from './sdk-components/CameraController';
@@ -44,6 +45,7 @@ const defaultUrlParams: any = {
 export default class App extends Component<{}, AppState> {
 
   private src: string; // the url source for the sdk
+  private lang?: string | null = null;
   private sdk?: Sdk;
 
   private pathNode: any; // the node for the PathRenderer component
@@ -71,6 +73,7 @@ export default class App extends Component<{}, AppState> {
    */
   private handleUrlParams(): string {
     const params = new URLSearchParams(window.location.search);
+    this.lang = params.get('lang');
     for (const [k, v] of Object.entries(defaultUrlParams)) {
       if (!params.has(k)) {
         params.append(k, ''+v); // convert v to string
@@ -93,6 +96,36 @@ export default class App extends Component<{}, AppState> {
         sweepData: sweepData,
       });
       this.sweepAlias = sweepAliases[data.sid];
+
+      if (this.sdk) {
+        // Add user-generated Mattertags to the default model
+        const mattertags = [];
+        if (data.sid === "GycExKiYVFp") {
+          mattertags.push(
+            {
+              label: "Revitalizing the Great Hall",
+              description: "Within the building’s Great Hall, new vestibule spaces were created to "+
+                "connect the main circulation corridor to new restrooms. Elevator lobbies and "+
+                "office suite entrances were treated as extensions of the original McKim design, "+
+                "with matching marble flooring and wall base, and stained oak millwork-encased "+
+                "openings. The installation of fire sprinklers throughout the building helped call "+
+                "attention to new opportunities for restoring spatial clarity; obsolete steel and "+
+                "wired glass partitions installed in the main corridor in the 1970s were removed, "+
+                "opening up the axial hallway to its original extents and further enhancing spatial "+
+                "connectivity.",
+              anchorPosition: {x: 16.55, y: 1.28-1.5, z: 6.69},
+              stemVector: { x: 0, y: 1, z: 0 },
+            }
+          );
+        }
+        // translate all existing + new mattertags
+        if (this.sdk) {
+          this.sdk.Mattertag.add(mattertags).then( () => {
+            this.translateMattertags();
+          });
+        }
+      }
+      
     });
 
     this.sdk.Sweep.data.subscribe({
@@ -104,7 +137,7 @@ export default class App extends Component<{}, AppState> {
     });
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
-      //console.log(currentSweep.sid);
+      console.log(currentSweep.sid, currentSweep.position);
       this.setState({
         currSweepId: currentSweep.sid,
       });
@@ -181,6 +214,31 @@ export default class App extends Component<{}, AppState> {
     this.setState({
       menuEnabled: !this.state.menuEnabled,
     });
+  }
+
+  /**
+   * TODO: make entirely async
+   */
+
+   private async translateMattertags() {
+    const { sdk, lang } = this;
+
+    if (sdk && lang) {
+      const Trans = new Translator(lang);
+      if (Trans.testQuery()) { // check HTTP request works
+        const mattertagData = await sdk.Mattertag.getData();
+        for (let i=0; i<mattertagData.length; i++) {
+          const { sid, label, description, media } = mattertagData[i];
+          const [ newLabel, newDescription ] = Trans.translate([label, description]);
+          sdk.Mattertag.editBillboard(sid, {
+            label: newLabel, 
+            description: newDescription, 
+            media,
+          });
+        }
+      }
+      Trans.checkUsage();
+    }
   }
 
   // --- Render ----------------------------------------------------------------
