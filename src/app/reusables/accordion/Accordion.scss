@@ -1,12 +1,14 @@
+@import 'src/app/style/variables.scss';
+
 .accordion {
   .accordion-header {
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 0 10px;
-    border-bottom: 2px solid rgb(80, 80, 80);
+    border-bottom: 2px solid $color-tangent-gray;
 
-    background-color: rgb(255, 255, 255);
+    background-color: $color-white;
     font-weight: bold;
     height: 28px;
     font-size: 16px;
@@ -23,7 +25,7 @@
       width: 5px;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: rgb(136, 136, 136);
+      background-color: $color-tangent-gray;
       border-radius: 5px;
     }
     &::-webkit-scrollbar-track {

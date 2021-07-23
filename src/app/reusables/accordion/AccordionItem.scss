@@ -1,3 +1,5 @@
+@import 'src/app/style/variables.scss';
+
 // Change height in AccordionItem.tsx - ACCORDION_ITEM_HEIGHT
 
 .accordion-item {
@@ -17,7 +19,7 @@
   }
   
   &:not(:last-child) {
-    border-bottom: 1px solid rgb(216, 216, 216);
+    border-bottom: 1px solid $color-moonrock-gray;
   }
   
   &.selected {
@@ -25,6 +27,6 @@
   }
 
   &:hover {
-    background: rgb(216, 216, 216);
+    background: $color-moonrock-gray;
   }
 }

@@ -1,0 +1,26 @@
+@import 'src/app/style/variables.scss';
+
+.controls-overlay {
+  pointer-events: all;
+  min-width: 150px;
+  min-height: 70px;
+  background-color: rgba($color-laser-red, 0.6);
+  border-radius: 14px;
+
+  position: absolute;
+  bottom: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .control-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}

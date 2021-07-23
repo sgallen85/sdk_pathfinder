@@ -1,3 +1,5 @@
+@import 'src/app/style/variables.scss';
+
 .menu {
   height: 100vh;
   width: 40ch;
@@ -7,8 +9,7 @@
     align-items: center;
     font-size: 16px;
     font-weight: bold;
-    padding: 8px 5px;
-    border-bottom: 1px solid rgb(117, 117, 117);
+    padding: 8px 5px 8px 10px;
 
     button.menu-close-button {
       cursor: pointer;
@@ -25,6 +26,10 @@
 
       &:hover {
         opacity: 0.6;
+      }
+
+      img.icon-x-lg {
+        height: 16px;
       }
     }
   }

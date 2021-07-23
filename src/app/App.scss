@@ -6,9 +6,18 @@
   // so this is a hacky fix
   overflow: hidden;
 
-  .fly-buttons {
-    position: absolute;
-    top: 15px;
-    left: 15px;
+  #frame-container {
+    width: 100%;
+    position: relative;
+
+    #overlay-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }

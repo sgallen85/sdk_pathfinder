@@ -1,37 +1,45 @@
+@import 'src/app/style/variables.scss';
+
 .accordion-group-container {
-
-  &.collapsed {
-    box-sizing: border-box;
-
-    .accordion-icon.icon-chevron-down {
-      transform: rotate(-180deg);
-    }
-  }
 
   .accordion-group-header {
     display: flex;
     align-items: center;
-
+    
     height: 40px;
     padding: 0 10px;
-    background-color: rgb(235, 235, 235);
+    background-color: $color-moonrock-gray;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-
+    
     .accordion-icon.icon-chevron-down {
       margin-left: auto;
       transition: transform 100ms linear;
-      height: 14px;
+      height: 8px;
     }
-
+    
     &:hover {
-      background-color: rgb(212, 212, 212);
+      background-color: $color-mirror-gray;
     }
   }
   
   .accordion-group {
     transition: height 250ms ease;
     overflow: hidden;
+  }
+  
+  &:last-child {
+    .accordion-item:last-child {
+      border-bottom: 1px solid $color-moonrock-gray;
+    }
+  }
+  
+  &.collapsed {
+    box-sizing: border-box;
+
+    .accordion-icon.icon-chevron-down {
+      transform: rotate(-180deg);
+    }
   }
 }

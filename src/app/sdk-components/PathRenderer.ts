@@ -78,7 +78,7 @@ class PathRenderer {
         opacity: opacity,
     });
 
-    const pathMesh = new THREE.Mesh(extrudeGeometry, this.material)
+    const pathMesh = new THREE.Mesh(extrudeGeometry, this.material);
 
     this.outputs.objectRoot = pathMesh;
     this.outputs.curve = spline;

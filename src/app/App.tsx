@@ -11,6 +11,7 @@ import { pathRendererType } from './sdk-components/PathRenderer';
 import { cameraControllerType } from './sdk-components/CameraController';
 import { sweepIdToPoint } from './utils';
 import { SweepAlias, sweepAliases } from './sweepAliases';
+import ControlsOverlay from './ui/overlay/ControlsOverlay';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -44,7 +45,6 @@ export default class App extends Component<{}, AppState> {
 
   private src: string; // the url source for the sdk
   private sdk?: Sdk;
-  private frameRef = React.createRef<HTMLIFrameElement>();
 
   private pathNode: any; // the node for the PathRenderer component
   private path: any; // PathRenderer component. Needed for CameraController.
@@ -109,8 +109,6 @@ export default class App extends Component<{}, AppState> {
         currSweepId: currentSweep.sid,
       });
     });
-
-    console.log(await this.sdk.Scene.query(['model'])[0]);
   }
 
   componentDidUpdate() {
@@ -172,6 +170,13 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
+  private exitFly = async () => {
+    const { sdk } = this;
+    if (!sdk) return;
+    await this.endFly();
+    await sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
+  }
+
   private toggleMenu = () => {
     this.setState({
       menuEnabled: !this.state.menuEnabled,
@@ -185,10 +190,16 @@ export default class App extends Component<{}, AppState> {
 
     return (
       <div className='app'>
-        <Frame src={this.src} customRef={this.frameRef} />
-        <div className='fly-buttons'>
-          <button onClick={this.startFly}>Start Fly</button>
-          <button onClick={this.endFly}>End Fly</button>
+        <div id='frame-container'>
+          <Frame src={this.src} />
+          <div id='overlay-container'>
+            {/* Put all showcase overlay components here */}
+            <ControlsOverlay
+              onPlay={this.startFly}
+              onPause={this.endFly}
+              onExit={this.exitFly}
+            />
+          </div>
         </div>
         { !menuEnabled &&
           <MenuButton onClick={this.toggleMenu} />

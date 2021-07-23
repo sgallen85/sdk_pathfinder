@@ -53,7 +53,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
           onClick={this.onClick}
         >
           {'' + header + (hasChildren && showNumber ? ` (${numChildren})` : '')}
-          <img src={process.env.PUBLIC_URL + '/icons/chevron-down.svg'} className='accordion-icon icon-chevron-down' alt={'Toggle accordion group'} />
+          <img src={process.env.PUBLIC_URL + '/icons/icon-chevron-down.svg'} className='accordion-icon icon-chevron-down' alt={'Toggle accordion group'} />
         </div>
         <div
           className={classNames('accordion-group', {

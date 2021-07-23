@@ -11,8 +11,10 @@ interface Props {
  * This component houses the actual Matterport IFrame element. Doesn't do anything else.
  */
 export default class Frame extends Component<Props, {}> {
+
   render() {
-    const { src, id, customRef } = this.props;
+    const { src, id, customRef, children } = this.props;
+
     return (
       <div className='frame'>
         <iframe
@@ -23,8 +25,8 @@ export default class Frame extends Component<Props, {}> {
           allowFullScreen={true}
           frameBorder='0'
           ref={customRef}
-        >
-        </iframe>
+        />
+        {children}
       </div>
     );
   }

@@ -15,7 +15,7 @@ export default class MenuButton extends Component<MenuButtonProps> {
       <div className='menu-button-container'>
         <button type='button' className={classNames('menu-button', {'text-button': !!text})} onClick={onClick}>
           {text ? text : 
-            <img src={process.env.PUBLIC_URL + '/icons/chevron-down.svg'} className='icon-chevron-down' alt='Open Menu' />
+            <img src={process.env.PUBLIC_URL + '/icons/icon-chevron-down.svg'} className='icon-chevron-down' alt='Open Menu' />
           }
         </button>
       </div>

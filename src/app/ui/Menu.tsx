@@ -104,7 +104,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
           <div className='menu-header-text'>{`Sweeps`}</div>
           { onClose &&
             <button type='button' className='menu-close-button' onClick={onClose}>
-              <img src={process.env.PUBLIC_URL + '/icons/x-lg.svg'} className=' icon-x-lg' alt='Close' />
+              <img src={process.env.PUBLIC_URL + '/icons/icon-x-lg.svg'} className='icon-x-lg' alt='Close' />
             </button>
           }
         </div>
