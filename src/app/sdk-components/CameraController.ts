@@ -8,11 +8,11 @@ type Euler = {
 };
 
 interface CameraControllerInputs {
-  curve: any,
-  speed: number,
-  verticalOffset: number,
-  enabled: boolean,
-  onChangeU: (u: number) => void,
+  curve: any, 
+  speed: number, 
+  verticalOffset: number, 
+  enabled: boolean, 
+  onChangeU: (u: number) => void, 
 }
 
 interface CameraControllerOutputs {
@@ -21,18 +21,18 @@ interface CameraControllerOutputs {
 
 class CameraController {
 
+  private u: number = 0; // number in [0, 1] representing position along curve
+  private length: number = 0; // length of curve
+  private up: undefined | Vector3;
   private timeReference: number = Date.now(); // keep track of time and u when pausing/resuming
   private uReference: number = 0;
-  private u: number = 0;
-  private length: number = 1;
-  private up: undefined | Vector3;
 
   private inputs: CameraControllerInputs = {
-    curve: null,
-    speed: 1.,
-    verticalOffset: 1.,
-    enabled: false,
-    onChangeU: (u) => null,
+    curve: null, // THREE.Curve object
+    speed: 1.5, // speed in meters per second
+    verticalOffset: 1., // vertical offset from curve
+    enabled: false, // true to move forward automatically, false to pause
+    onChangeU: (u) => null, // callback eahc time u changes
   };
 
   private outputs = {
@@ -41,13 +41,15 @@ class CameraController {
 
   private context: any;
 
+  /**
+   * Given u along curve, return position and rotation for camera.
+   */
   private getPoseAt(u: number): {position: Vector3, rotation: Euler} {
     const { curve, speed, verticalOffset } = this.inputs;
     const THREE = this.context.three;
-
     // position
-    const uPast = Math.max(u - speed / this.length, 0); // one second in past
-    const uFuture = Math.min(u + speed / this.length, 1); // one second in the future
+    const uPast = Math.max(u - 0.1 * speed / this.length, 0); // 0.1 second in past
+    const uFuture = Math.min(u + speed / this.length, 1); // 1 second in the future
     const position = curve.getPointAt(u);
     position.y += verticalOffset; // add vertical offset;
     const positionPast = curve.getPointAt(uPast);
@@ -58,6 +60,9 @@ class CameraController {
     return { position, rotation };
   }
 
+  /**
+   * Set camera pose.
+   */
   private setCamera(position: Vector3, rotation: Euler) {
     const { camera } = this.outputs;
     camera.position.copy(position);
@@ -65,6 +70,9 @@ class CameraController {
     camera.updateProjectionMatrix();
   }
 
+  /**
+   * Manually set u for camera.
+   */
   public setManualU(u: number) {
     const { position, rotation } = this.getPoseAt(u);
     this.setCamera(position, rotation);
@@ -90,9 +98,9 @@ class CameraController {
   public onInputsUpdated = (_previous: any) => {
     const { enabled } = this.inputs;
     if (enabled) {
-      this.timeReference = Date.now()
+      this.timeReference = Date.now() // when resuming, update reference time
     } else {
-      this.uReference = this.u;
+      this.uReference = this.u; // when pausing, update reference u
     }
   };
 
@@ -100,7 +108,7 @@ class CameraController {
     const { speed, enabled } = this.inputs;
     if (enabled) {
       const deltaTime = (Date.now() - this.timeReference)/1000;
-      const u = Math.min(this.uReference + speed * deltaTime / this.length, 1); // clamp u <= 1
+      const u = Math.min(this.uReference + speed * deltaTime / this.length, 1); // clamp u less than 1
       const { position, rotation } = this.getPoseAt(u);
       this.setCamera(position, rotation);
       this.inputs.onChangeU(u);

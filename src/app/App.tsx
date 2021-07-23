@@ -50,7 +50,7 @@ const defaultUrlParams: any = {
 export default class App extends Component<{}, AppState> {
 
   private src: string; // the url source for the sdk
-  private lang?: string | null = null;
+  private lang: string | null = null;
   private sdk?: Sdk;
 
   private pathNode: any; // the node for the PathRenderer component
@@ -96,6 +96,33 @@ export default class App extends Component<{}, AppState> {
     this.sdk = await GetSDK('showcase', defaultUrlParams.applicationKey);
     await initComponents(this.sdk);
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Add user-generated Mattertags to the default model
+    // In production, this block will be removed
+    await this.sdk.Model.getData().then( async (data) => {
+      if (data.sid === 'GycExKiYVFp') {
+        const mattertags = [];
+        mattertags.push(
+          {
+            label: "Revitalizing the Great Hall",
+            description: "Within the building’s Great Hall, new vestibule spaces were created to "+
+              "connect the main circulation corridor to new restrooms. Elevator lobbies and "+
+              "office suite entrances were treated as extensions of the original McKim design, "+
+              "with matching marble flooring and wall base, and stained oak millwork-encased "+
+              "openings. The installation of fire sprinklers throughout the building helped call "+
+              "attention to new opportunities for restoring spatial clarity; obsolete steel and "+
+              "wired glass partitions installed in the main corridor in the 1970s were removed, "+
+              "opening up the axial hallway to its original extents and further enhancing spatial "+
+              "connectivity.",
+            anchorPosition: {x: 16.55, y: 1.28-1.5, z: 6.69},
+            stemVector: { x: 0, y: 1, z: 0 },
+          }
+        );
+        await this.sdk?.Mattertag.add(mattertags);
+      }
+    });
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     this.sdk.Model.getData().then( (data) => {
       const sweepData = data.sweeps;
       this.pathfinder = new Pathfinder(sweepData);
@@ -103,36 +130,6 @@ export default class App extends Component<{}, AppState> {
         sweepData: sweepData,
       });
       this.sweepAlias = sweepAliases[data.sid];
-
-      if (this.sdk) {
-        // Add user-generated Mattertags to the default model
-        const mattertags = [];
-        if (data.sid === "GycExKiYVFp") {
-          mattertags.push(
-            {
-              label: "Revitalizing the Great Hall",
-              description: "Within the building’s Great Hall, new vestibule spaces were created to "+
-                "connect the main circulation corridor to new restrooms. Elevator lobbies and "+
-                "office suite entrances were treated as extensions of the original McKim design, "+
-                "with matching marble flooring and wall base, and stained oak millwork-encased "+
-                "openings. The installation of fire sprinklers throughout the building helped call "+
-                "attention to new opportunities for restoring spatial clarity; obsolete steel and "+
-                "wired glass partitions installed in the main corridor in the 1970s were removed, "+
-                "opening up the axial hallway to its original extents and further enhancing spatial "+
-                "connectivity.",
-              anchorPosition: {x: 16.55, y: 1.28-1.5, z: 6.69},
-              stemVector: { x: 0, y: 1, z: 0 },
-            }
-          );
-        }
-        // translate all existing + new mattertags
-        if (this.sdk) {
-          this.sdk.Mattertag.add(mattertags).then( () => {
-            this.translateMattertags();
-          });
-        }
-      }
-      
     });
 
     this.sdk.Sweep.data.subscribe({
@@ -149,6 +146,9 @@ export default class App extends Component<{}, AppState> {
         currSweepId: currentSweep.sid,
       });
     });
+
+    // translate all mattertags
+    this.translateMattertags();
   }
 
   public componentDidUpdate(_prevProps: any, prevState: AppState) {
@@ -253,9 +253,8 @@ export default class App extends Component<{}, AppState> {
   }
 
   /**
-   * TODO: make entirely async
+   * TODO: make async to speed up
    */
-
    private async translateMattertags() {
     const { sdk, lang } = this;
 

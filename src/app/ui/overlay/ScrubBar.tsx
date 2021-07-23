@@ -13,10 +13,6 @@ interface ScrubBarState {
 
 export default class ScrubBar extends Component<ScrubBarProps, ScrubBarState> {
 
-  // foo = (x) => {
-  //   document.getElementById('control-bar').innerHTML=x
-  // }
-
   public render() {
 
     const { onMouseDown, onMouseUp, onChange, u } = this.props;
