@@ -50,7 +50,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
     return (
       <div className={classNames('accordion-group-container', {'collapsed': !expanded})}>
         <div
-          className='accordion-group-header'
+          className='accordion-group-header header-font'
           onClick={this.onClick}
         >
           {'' + header + (hasChildren && showNumber ? ` (${numChildren})` : '')}

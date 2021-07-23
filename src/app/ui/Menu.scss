@@ -8,13 +8,11 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    font-weight: bold;
-    padding: 8px 5px 8px 10px;
+    padding: 8px 5px 8px 8px;
 
     button.menu-close-button {
       cursor: pointer;
       margin-left: auto;
-      // center 'x' icon
       display: flex;
       align-items: center;
       justify-content: center;
@@ -22,14 +20,16 @@
       border: none;
       background: transparent;
 
-      transition: all 250ms ease;
-
-      &:hover {
-        opacity: 0.6;
+      
+      .icon-close {
+        font-size: 24px;
+        transition: all 250ms ease;
       }
-
-      img.icon-x-lg {
-        height: 16px;
+      
+      &:hover {
+        .icon-close {
+          color: $color-laser-red
+        }
       }
     }
   }

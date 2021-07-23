@@ -1,0 +1,27 @@
+@import 'src/app/style/colors.scss';
+
+.flymode-button-container {
+  position: absolute;
+  bottom: 20px;
+  pointer-events: all;
+  
+  button {
+    background-color: $color-white;
+    border: none;
+    border-radius: 500px; // obscenely large border radius -> perfect capsule shape
+    padding: 10px 48px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px $color-tangent-gray;
+
+    font-size: 18px;
+    user-select: none;
+
+    transition: all 200ms ease;
+
+    &:hover {
+      background-color: $color-laser-red;
+      color: $color-white;
+      box-shadow: none;
+    }
+  }
+}

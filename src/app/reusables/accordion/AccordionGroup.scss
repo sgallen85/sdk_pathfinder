@@ -10,13 +10,12 @@
     padding: 0 10px;
     background-color: $color-moonrock-gray;
     font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
     
-    .accordion-icon.icon-chevron-down {
+    .icon.icon-chevron-down {
       margin-left: auto;
       transition: transform 100ms linear;
-      height: 8px;
+      font-size: 16px;
     }
     
     &:hover {
@@ -38,8 +37,8 @@
   &.collapsed {
     box-sizing: border-box;
 
-    .accordion-icon.icon-chevron-down {
-      transform: rotate(-180deg);
+    .icon.icon-chevron-down {
+      transform: rotate(180deg);
     }
   }
 }

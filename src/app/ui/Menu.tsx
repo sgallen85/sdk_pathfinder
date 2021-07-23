@@ -5,6 +5,7 @@ import Accordion from '../reusables/accordion/Accordion';
 import AccordionGroup from '../reusables/accordion/AccordionGroup';
 import AccordionItem from '../reusables/accordion/AccordionItem';
 import { SweepAlias } from '../sweepAliases';
+import Icon from '../reusables/icon/Icon';
 
 interface MenuProps {
   currSweepId?: string;
@@ -103,10 +104,10 @@ export default class Menu extends Component<MenuProps, MenuState> {
     return (
       <div className='menu'>
         <div className='menu-header'>
-          <div className='menu-header-text'>{`Sweeps`}</div>
+          <div className='menu-header-text header-font'>Sweeps</div>
           { onClose &&
             <button type='button' className='menu-close-button' onClick={onClose}>
-              <img src={process.env.PUBLIC_URL + '/icons/icon-x-lg.svg'} className='icon-x-lg' alt='Close' />
+              <Icon icon='close' />
             </button>
           }
         </div>

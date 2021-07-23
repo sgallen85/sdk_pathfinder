@@ -13,7 +13,7 @@ export default class Accordion extends Component<AccordionProps> {
     return (
       <div className='accordion'>
         { header &&
-          <div className='accordion-header'>{header}</div>
+          <div className='accordion-header header-font'>{header}</div>
         }
         <div className='accordion-groups'>
           {children}

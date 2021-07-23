@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { Component } from 'react';
+import Icon from '../reusables/icon/Icon';
 import './MenuButton.scss';
 
 interface MenuButtonProps {
@@ -15,7 +16,7 @@ export default class MenuButton extends Component<MenuButtonProps> {
       <div className='menu-button-container'>
         <button type='button' className={classNames('menu-button', {'text-button': !!text})} onClick={onClick}>
           {text ? text : 
-            <img src={process.env.PUBLIC_URL + '/icons/icon-chevron-down.svg'} className='icon-chevron-down' alt='Open Menu' />
+            <Icon icon='chevron-left' />
           }
         </button>
       </div>

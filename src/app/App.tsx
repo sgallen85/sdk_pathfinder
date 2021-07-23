@@ -13,6 +13,7 @@ import { cameraControllerType } from './sdk-components/CameraController';
 import { sweepIdToPoint } from './utils';
 import { SweepAlias, sweepAliases } from './sweepAliases';
 import ControlsOverlay from './ui/overlay/ControlsOverlay';
+import FlyModeButton from './ui/overlay/FlyModeButton';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -23,7 +24,9 @@ interface AppState {
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[]; // put in state because changes should trigger rerender
   sweepMap?: Dictionary<MpSdk.Sweep.ObservableSweepData>;
+  path?: any; // put in state so path updates trigger rerender
   menuEnabled: boolean;
+  flyModeEnabled: boolean;
 }
 
 const defaultUrlParams: any = {
@@ -64,6 +67,7 @@ export default class App extends Component<{}, AppState> {
     this.state = {
       sweepData: [],
       menuEnabled: true,
+      flyModeEnabled: false,
     };
   }
 
@@ -144,7 +148,12 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate(_prevProps: any, prevState: AppState) {
+    const { currSweepId, selectedSweepId } = this.state;
+
+    // only update path if sweep state changes
+    (currSweepId !== prevState.currSweepId ||
+    selectedSweepId !== prevState.selectedSweepId) &&
     this.handlePath();
   }
 
@@ -172,8 +181,20 @@ export default class App extends Component<{}, AppState> {
         stepMultiplier: 10,
         color: 0x8df763,
       });
+      this.setState({path: this.path});
       this.pathNode.start();
     }
+  }
+
+  private toggleFlyMode = () => {
+    this.setState(prevState => {
+      if (prevState.flyModeEnabled) {
+        this.exitFly();
+      }
+      return {
+        flyModeEnabled: !prevState.flyModeEnabled,
+      }
+    });
   }
 
   private startFly = async () => {
@@ -249,6 +270,8 @@ export default class App extends Component<{}, AppState> {
       selectedSweepId,
       sweepData,
       menuEnabled,
+      flyModeEnabled,
+      path,
     } = this.state;
 
     return (
@@ -257,13 +280,16 @@ export default class App extends Component<{}, AppState> {
           <Frame src={this.src} />
           <div id='overlay-container'>
             {/* Put all showcase overlay components here */}
-            { this.path &&
+            { path && (
+              flyModeEnabled ?
               <ControlsOverlay
               onPlay={this.startFly}
               onPause={this.endFly}
-              onExit={this.exitFly}
+              onExit={this.toggleFlyMode}
               />
-            }
+              :
+              <FlyModeButton onClick={this.toggleFlyMode} />
+            )}
           </div>
         </div>
         { !menuEnabled &&
