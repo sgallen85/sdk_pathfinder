@@ -58,6 +58,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
         header={name}
         onClick={() => onChange(sid)}
         selected={sid === selectedSweepId}
+        key={sid}
       />
     );
   }
@@ -88,6 +89,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
           header={`Floor ${floor}`}
           expanded={!!selectedFloor && ''+selectedFloor === floor}
           showNumber={true}
+          key={floor}
         >
           {items}
         </AccordionGroup>

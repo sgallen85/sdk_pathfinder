@@ -1,5 +1,8 @@
 @import 'src/app/style/colors.scss';
 
+$play-button-color: $color-sputnik-green;
+$pause-button-color: $color-electron-yellow;
+
 .controls-overlay {
   pointer-events: all;
   min-width: 150px;
@@ -26,20 +29,29 @@
     .icon {
       color: $color-moonrock-gray;
       font-size: 32px;
-      transition: all 200ms ease;
+      transition: all 100ms ease;
       // square is a little big
       &.icon-stop {
         font-size: 28px;
       }
     }
 
-    &:hover {
+    &.selected {
+      .icon-play {
+        color: $play-button-color;
+      }
+      .icon-stop {
+        color: $pause-button-color;
+      }
+    }
+
+    &:hover:not(.selected) {
       .icon {        
         &.icon-play {
-          color: $color-earth-green;
+          color: $play-button-color;
         }
         &.icon-stop {
-          color: $color-deimos-orange;
+          color: $pause-button-color;
         }
         &.icon-close {
           color: $color-laser-red;
