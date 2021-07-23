@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/sdk_pathfinder/static/css/main.8fcf79aa.chunk.css",
-    "main.js": "/sdk_pathfinder/static/js/main.d3d9989b.chunk.js",
-    "main.js.map": "/sdk_pathfinder/static/js/main.d3d9989b.chunk.js.map",
+    "main.css": "/sdk_pathfinder/static/css/main.96dffafe.chunk.css",
+    "main.js": "/sdk_pathfinder/static/js/main.491d5c19.chunk.js",
+    "main.js.map": "/sdk_pathfinder/static/js/main.491d5c19.chunk.js.map",
     "runtime-main.js": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js",
     "runtime-main.js.map": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js.map",
     "static/js/2.6c746a87.chunk.js": "/sdk_pathfinder/static/js/2.6c746a87.chunk.js",
     "static/js/2.6c746a87.chunk.js.map": "/sdk_pathfinder/static/js/2.6c746a87.chunk.js.map",
     "index.html": "/sdk_pathfinder/index.html",
-    "static/css/main.8fcf79aa.chunk.css.map": "/sdk_pathfinder/static/css/main.8fcf79aa.chunk.css.map",
+    "static/css/main.96dffafe.chunk.css.map": "/sdk_pathfinder/static/css/main.96dffafe.chunk.css.map",
     "static/js/2.6c746a87.chunk.js.LICENSE.txt": "/sdk_pathfinder/static/js/2.6c746a87.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1dc9acb8.js",
     "static/js/2.6c746a87.chunk.js",
-    "static/css/main.8fcf79aa.chunk.css",
-    "static/js/main.d3d9989b.chunk.js"
+    "static/css/main.96dffafe.chunk.css",
+    "static/js/main.491d5c19.chunk.js"
   ]
 }
