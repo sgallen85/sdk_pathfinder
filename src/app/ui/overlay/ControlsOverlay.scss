@@ -1,10 +1,10 @@
-@import 'src/app/style/variables.scss';
+@import 'src/app/style/colors.scss';
 
 .controls-overlay {
   pointer-events: all;
   min-width: 150px;
   min-height: 70px;
-  background-color: rgba($color-laser-red, 0.6);
+  background-color: rgba($color-portal-black, 0.8);
   border-radius: 14px;
 
   position: absolute;
@@ -22,5 +22,29 @@
     background: none;
     border: none;
     cursor: pointer;
+
+    .icon {
+      color: $color-moonrock-gray;
+      font-size: 32px;
+      transition: all 200ms ease;
+      // square is a little big
+      &.icon-stop {
+        font-size: 28px;
+      }
+    }
+
+    &:hover {
+      .icon {        
+        &.icon-play {
+          color: $color-earth-green;
+        }
+        &.icon-stop {
+          color: $color-deimos-orange;
+        }
+        &.icon-close {
+          color: $color-laser-red;
+        }
+      }
+    }
   }
 }

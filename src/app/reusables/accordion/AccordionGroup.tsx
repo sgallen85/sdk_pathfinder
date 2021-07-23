@@ -2,6 +2,7 @@ import { Component } from 'react';
 import classNames from 'classnames';
 import './AccordionGroup.scss';
 import { ACCORDION_ITEM_HEIGHT } from './AccordionItem';
+import Icon from '../icon/Icon';
 
 interface AccordionGroupProps {
   header?: string;
@@ -53,7 +54,7 @@ export default class AccordionGroup extends Component<AccordionGroupProps, Accor
           onClick={this.onClick}
         >
           {'' + header + (hasChildren && showNumber ? ` (${numChildren})` : '')}
-          <img src={process.env.PUBLIC_URL + '/icons/icon-chevron-down.svg'} className='accordion-icon icon-chevron-down' alt={'Toggle accordion group'} />
+          <Icon icon='chevron-down' />
         </div>
         <div
           className={classNames('accordion-group', {

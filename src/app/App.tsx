@@ -186,7 +186,12 @@ export default class App extends Component<{}, AppState> {
   // --- Render ----------------------------------------------------------------
 
   public render() {
-    const { currSweepId, selectedSweepId, sweepData, menuEnabled } = this.state;
+    const {
+      currSweepId,
+      selectedSweepId,
+      sweepData,
+      menuEnabled,
+    } = this.state;
 
     return (
       <div className='app'>
@@ -194,11 +199,13 @@ export default class App extends Component<{}, AppState> {
           <Frame src={this.src} />
           <div id='overlay-container'>
             {/* Put all showcase overlay components here */}
-            <ControlsOverlay
+            { this.path &&
+              <ControlsOverlay
               onPlay={this.startFly}
               onPause={this.endFly}
               onExit={this.exitFly}
-            />
+              />
+            }
           </div>
         </div>
         { !menuEnabled &&
