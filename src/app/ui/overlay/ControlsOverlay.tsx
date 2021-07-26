@@ -1,10 +1,10 @@
-import classNames from 'classnames';
 import { Component } from 'react';
 import Icon from '../../reusables/icon/Icon';
 import ScrubBar from './ScrubBar';
 import './ControlsOverlay.scss';
 
 interface ControlsOverlayProps {
+  playing: boolean;
   onPlay: () => void;
   onPause: () => void;
   onExit: () => void;
@@ -12,73 +12,31 @@ interface ControlsOverlayProps {
   u: number;
 }
 
-enum ButtonOptions {
-  PLAY = 'play',
-  PAUSE = 'pause',
-  NONE = 'none',
-}
-interface ControlsOverlayState {
-  selectedButton: ButtonOptions;
-}
-
-export default class ControlsOverlay extends Component<ControlsOverlayProps, ControlsOverlayState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      selectedButton: ButtonOptions.NONE,
-    }
-  }
-
-  private onPlay = () => {
-    this.props.onPlay();
-    this.setState({
-      selectedButton: ButtonOptions.PLAY,
-    });
-  }
-
-  private onPause = () => {
-    this.props.onPause();
-    this.setState({
-      selectedButton: ButtonOptions.PAUSE,
-    });
-  }
+export default class ControlsOverlay extends Component<ControlsOverlayProps> {
 
   public render() {
-    const { onExit, setU, u } = this.props;
-    const { selectedButton } = this.state;
+    const { playing, onPlay, onPause, onExit, setU, u } = this.props;
 
     return (
-      <div>
-        <ScrubBar 
-          onMouseDown={this.onPause}
-          onMouseUp={this.onPlay}
-          onChange={(e) => setU(parseFloat(e.target.value))}
-          u={u}
-        />
+      <div className='controls-overlay-container'>
         <div className='controls-overlay'>
-          <button type='button'
-            className={classNames(
-              'control-button',
-              'play-button',
-              { 'selected': selectedButton === ButtonOptions.PLAY },
-            )}
-            onClick={this.onPlay}
-          >
-            <Icon icon='play' />
-          </button>
-          <button type='button'
-            className={classNames(
-              'control-button',
-              'pause-button',
-              { 'selected': selectedButton === ButtonOptions.PAUSE },
-            )}
-            onClick={this.onPause}
-          >
-            <Icon icon='stop' />
-          </button>
-          <button type='button' className='control-button exit-button' onClick={onExit}>
-            <Icon icon='close' />
-          </button>
+          <ScrubBar 
+            onMouseDown={onPause}
+            onMouseUp={onPlay}
+            onChange={(e) => setU(parseFloat(e.target.value))}
+            u={u}
+          />
+          <div className='control-button-container'>
+            <button type='button'
+              className='control-button play-button'
+              onClick={playing ? onPause : onPlay}
+            >
+              <Icon icon={playing ? 'showcase-pause-lg' : 'showcase-play-lg'} classes='play-pause-button' />
+            </button>
+            <button type='button' className='control-button exit-button' onClick={onExit}>
+              <Icon icon='close' />
+            </button>
+          </div>
         </div>
       </div>
     );

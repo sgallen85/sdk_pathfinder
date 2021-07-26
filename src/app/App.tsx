@@ -28,6 +28,7 @@ interface AppState {
   menuEnabled: boolean;
   flyModeEnabled: boolean;
   flyU: number; // integer in [0, 1] indicating position in flythrough
+  flyModePlaying: boolean;
 }
 
 const defaultUrlParams: any = {
@@ -70,6 +71,7 @@ export default class App extends Component<{}, AppState> {
       menuEnabled: true,
       flyModeEnabled: false,
       flyU: 0,
+      flyModePlaying: false,
     };
   }
 
@@ -233,10 +235,17 @@ export default class App extends Component<{}, AppState> {
     const { sdk, flyNode } = this;
     if (flyNode) flyNode.stop();
     if (sdk) sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE);
+    this.setState({ flyModePlaying: false, });
   };
 
-  private playFly = () => {if (this.camCon) this.camCon.inputs.enabled = true};
-  private pauseFly = () => {if (this.camCon) this.camCon.inputs.enabled = false};
+  private playFly = () => {
+    if (this.camCon) this.camCon.inputs.enabled = true;
+    this.setState({ flyModePlaying: true, });
+  };
+  private pauseFly = () => {
+    if (this.camCon) this.camCon.inputs.enabled = false;
+    this.setState({ flyModePlaying: false, });
+  };
   private setFlyU = (u: number) => {if (this.camCon) this.camCon.setU(u)};
 
   private toggleMenu = () => {
@@ -280,6 +289,7 @@ export default class App extends Component<{}, AppState> {
       flyModeEnabled,
       flyU,
       path,
+      flyModePlaying,
     } = this.state;
 
     return (
@@ -291,11 +301,12 @@ export default class App extends Component<{}, AppState> {
             { path && (
               flyModeEnabled ?
               <ControlsOverlay
-              onPlay={this.playFly}
-              onPause={this.pauseFly}
-              onExit={this.toggleFlyMode}
-              setU={this.setFlyU}
-              u={flyU}
+                playing={flyModePlaying}
+                onPlay={this.playFly}
+                onPause={this.pauseFly}
+                onExit={this.toggleFlyMode}
+                setU={this.setFlyU}
+                u={flyU}
               /> 
               : <FlyModeButton onClick={this.toggleFlyMode} />
             )}

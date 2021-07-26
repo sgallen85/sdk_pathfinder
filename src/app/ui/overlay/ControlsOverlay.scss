@@ -1,61 +1,52 @@
 @import 'src/app/style/colors.scss';
 
-$play-button-color: $color-sputnik-green;
-$pause-button-color: $color-electron-yellow;
-
-.controls-overlay {
-  pointer-events: all;
-  min-width: 150px;
-  min-height: 70px;
-  background-color: rgba($color-portal-black, 0.8);
-  border-radius: 14px;
-
-  position: absolute;
-  bottom: 40px;
-
+.controls-overlay-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  .controls-overlay {
+    pointer-events: all;
+    background-color: rgba($color-portal-black, 0.8);
+    border-radius: 14px;
+    padding: 10px;
 
-  .control-button {
-    width: 100%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
+    position: absolute;
+    bottom: 40px;
 
-    .icon {
-      color: $color-moonrock-gray;
-      font-size: 32px;
-      transition: all 100ms ease;
-      // square is a little big
-      &.icon-stop {
-        font-size: 28px;
-      }
-    }
+    .control-button-container {
+      display: flex;
+      margin-top: 6px;
+      gap: 10px;
+      padding: 0 6px 0 8px;
 
-    &.selected {
-      .icon-play {
-        color: $play-button-color;
-      }
-      .icon-stop {
-        color: $pause-button-color;
-      }
-    }
+      .control-button {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
 
-    &:hover:not(.selected) {
-      .icon {        
-        &.icon-play {
-          color: $play-button-color;
+        .icon {
+          color: $color-moonrock-gray;
+          font-size: 32px;
+          transition: color 100ms ease;
+
+          &.play-pause-button {
+            font-size: 28px;
+          }
         }
-        &.icon-stop {
-          color: $pause-button-color;
+
+        &.exit-button {
+          margin-left: auto;
         }
-        &.icon-close {
-          color: $color-laser-red;
+
+        &:hover {
+          .icon {        
+            color: $color-laser-red;
+          }
         }
       }
     }
