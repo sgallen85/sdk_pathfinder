@@ -18,4 +18,14 @@ export function sweepIdToPoint(id: string, sweepData: Dictionary<MpSdk.Sweep.Obs
   return sweepData[id].position;
 }
 
+/**
+ * Returns a number clamped to the given range.
+ * @param {number} num The number to clamp.
+ * @param {number} min The lower bound of the range.
+ * @param {number} max The upper bound of the range.
+ */
+export function clamp(num: number, min: number, max: number): number {
+  return Math.min(Math.max(num, min), max);
+}
+
 export {};

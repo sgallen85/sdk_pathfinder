@@ -1,0 +1,19 @@
+@import 'src/app/style/colors.scss';
+
+.progress-bar-container {
+  min-width: 400px;
+  height: 20px;
+
+  .progress-bar-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    background-color: $color-moonrock-gray;
+
+    .progress-bar-progress {
+      height: 100%;
+      background-color: $color-laser-red;
+    }
+  }
+}

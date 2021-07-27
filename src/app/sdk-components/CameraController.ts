@@ -1,4 +1,5 @@
 import { Vector3 } from '../../mp/sdk';
+import { clamp } from '../utils';
 
 type Euler = {
 	x: number;
@@ -24,8 +25,6 @@ class CameraController {
   private u: number = 0; // number in [0, 1] representing position along curve
   private length: number = 0; // length of curve
   private up: undefined | Vector3;
-  private timeReference: number = Date.now(); // keep track of time and u when pausing/resuming
-  private uReference: number = 0;
 
   private inputs: CameraControllerInputs = {
     curve: null, // THREE.Curve object
@@ -74,10 +73,10 @@ class CameraController {
    * Manually set u for camera.
    */
   public setU(u: number) {
+    this.u = u;
     const { position, rotation } = this.getPoseAt(u);
     this.setCamera(position, rotation);
     this.inputs.changeUCallback(u);
-    this.uReference = u;
   }
 
   // --- IComponent methods ----------------------------------------------------
@@ -92,28 +91,14 @@ class CameraController {
     this.up = new THREE.Vector3(0, 1, 0);
   };
 
-  public onEvent = function(_type: any, _data: any) {
-  };
-
-  public onInputsUpdated = (_previous: any) => {
-    const { enabled } = this.inputs;
-    if (enabled) {
-      this.timeReference = Date.now() // when resuming, update reference time
-    } else {
-      this.uReference = this.u; // when pausing, update reference u
-    }
-  };
-
-  public onTick = async (_tickDelta: any) => {
+  public onTick = async (tickDelta: number) => {
     const { speed, enabled } = this.inputs;
     if (enabled) {
-      const deltaTime = (Date.now() - this.timeReference)/1000;
-      let u = this.uReference + speed * deltaTime / this.length; 
-      u = Math.min(Math.max(u, 0), 1); // clamp u into [0, 1]
+      this.u = clamp(this.u + speed * (tickDelta/1000) / this.length, 0, 1);
+      const { u } = this;
       const { position, rotation } = this.getPoseAt(u);
       this.setCamera(position, rotation);
       this.inputs.changeUCallback(u);
-      this.u = u;
     }
   };
 

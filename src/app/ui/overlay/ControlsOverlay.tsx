@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Icon from '../../reusables/icon/Icon';
-import ScrubBar from './ScrubBar';
 import './ControlsOverlay.scss';
+import ProgressBar from './ProgressBar';
 
 interface ControlsOverlayProps {
   playing: boolean;
@@ -12,24 +12,54 @@ interface ControlsOverlayProps {
   u: number;
 }
 
-export default class ControlsOverlay extends Component<ControlsOverlayProps> {
+interface ControlsOverlayState {
+  rememberPlayState: boolean;
+}
+
+export default class ControlsOverlay extends Component<ControlsOverlayProps, ControlsOverlayState> {
+
+  constructor(props: ControlsOverlayProps) {
+    super(props);
+    this.state = {
+      rememberPlayState: props.playing,
+    }
+  }
+
+  private onScrubMouseDown = () => {
+    this.props.onPause();
+  }
+
+  private onScrubMouseUp  = () => {
+    if (this.state.rememberPlayState) {
+      this.props.onPlay();
+    }
+  }
+
+  private togglePlay = () => {
+    const { playing, onPlay, onPause } = this.props;
+    playing ? onPause() : onPlay();
+    this.setState({ rememberPlayState: !playing })
+  }
 
   public render() {
-    const { playing, onPlay, onPause, onExit, setU, u } = this.props;
+    const { playing, onExit, setU, u } = this.props;
 
     return (
       <div className='controls-overlay-container'>
         <div className='controls-overlay'>
-          <ScrubBar 
-            onMouseDown={onPause}
-            onMouseUp={onPlay}
-            onChange={(e) => setU(parseFloat(e.target.value))}
-            u={u}
+          <ProgressBar
+            min={0}
+            max={1}
+            scrub={true}
+            onChange={setU}
+            onMouseDown={this.onScrubMouseDown}
+            onMouseUp={this.onScrubMouseUp}
+            overrideValue={u}
           />
           <div className='control-button-container'>
             <button type='button'
               className='control-button play-button'
-              onClick={playing ? onPause : onPlay}
+              onClick={this.togglePlay}
             >
               <Icon icon={playing ? 'showcase-pause-lg' : 'showcase-play-lg'} classes='play-pause-button' />
             </button>
