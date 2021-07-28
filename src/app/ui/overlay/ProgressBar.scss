@@ -1,19 +1,21 @@
 @import 'src/app/style/colors.scss';
 
+$progress-bar-transition-time: 50ms;
+
 .progress-bar-container {
   position: relative;
   min-width: 400px;
-  height: 4px;
+  height: 16px;
   cursor: pointer;
 
   display: flex;
   align-items: center;
 
-  transition: height 100ms linear;
+  transition: height $progress-bar-transition-time linear;
 
   .progress-bar-track-container {
     width: 100%;
-    height: 100%;
+    height: 4px;
     border-radius: 500px;
     overflow: hidden;
     
@@ -37,7 +39,7 @@
     position: absolute;
     transform: scale(0);
 
-    transition: transform 100ms linear;
+    transition: transform $progress-bar-transition-time linear;
 
     &:hover {
       filter: brightness(0.8);
@@ -45,7 +47,9 @@
   }
 
   &:hover {
-    height: 8px;
+    .progress-bar-track-container {
+      height: 8px;
+    }
 
     .progress-bar-thumb {
       transform: scale(1);
