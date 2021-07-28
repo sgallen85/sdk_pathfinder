@@ -1,19 +1,54 @@
 @import 'src/app/style/colors.scss';
 
 .progress-bar-container {
+  position: relative;
   min-width: 400px;
-  height: 20px;
+  height: 4px;
+  cursor: pointer;
 
-  .progress-bar-track {
-    position: relative;
+  display: flex;
+  align-items: center;
+
+  transition: height 100ms linear;
+
+  .progress-bar-track-container {
     width: 100%;
     height: 100%;
-
-    background-color: $color-moonrock-gray;
-
-    .progress-bar-progress {
+    border-radius: 500px;
+    overflow: hidden;
+    
+    .progress-bar-track {
+      position: relative;
+      width: 100%;
       height: 100%;
-      background-color: $color-laser-red;
+      background-color: $color-moonrock-gray;
+
+      .progress-bar-progress {
+        height: 100%;
+        background-color: $color-laser-red;
+      }
+    }
+  }
+
+  .progress-bar-thumb {
+    // Change size in ProgressBar.tsx - PROGRESS_BAR_THUMB_SIZE
+    border-radius: 500px;
+    background-color: $color-laser-red;
+    position: absolute;
+    transform: scale(0);
+
+    transition: transform 100ms linear;
+
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
+
+  &:hover {
+    height: 8px;
+
+    .progress-bar-thumb {
+      transform: scale(1);
     }
   }
 }

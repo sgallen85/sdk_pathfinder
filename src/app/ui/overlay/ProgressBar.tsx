@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { clamp } from '../../utils';
 import './ProgressBar.scss';
 
+const PROGRESS_BAR_THUMB_SIZE = '14px';
+
 interface ProgressBarProps {
   min: number;
   max: number;
@@ -9,6 +11,7 @@ interface ProgressBarProps {
   overrideValue?: number;
   scrub?: boolean;
   step?: number;
+  noThumb?: boolean;
   onMouseDown?: (value: number) => void;
   onMouseUp?: (value: number) => void;
   onChange?: (value: number) => void;
@@ -60,12 +63,13 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
   /**
    * Calculates value of progress bar from mouse position.
    * @param mx Mouse X position.
-   * @returns Clamped value based on min/max, or undefined iff ref is undefined.
+   * @returns Clamped value based on min/max, or current value iff ref is undefined.
    */
-  private calculate(mx: number): number | undefined {
+  private calculate(mx: number): number {
     const { min, max } = this.props;
+    const { value } = this.state;
     const track = this.trackRef.current;
-    if (!track) return;
+    if (!track) return value;
 
     const rect = track.getBoundingClientRect();
     const dx = mx - rect.left;
@@ -78,9 +82,10 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
 
   private onMouseDown = (e: any) => {
     const { onMouseDown, onChange } = this.props;
-    
-    const value = this.calculate((e as MouseEvent).clientX);
-    if (!value) return;
+    const ev = e as MouseEvent;
+    if (ev.button !== 0) return;
+
+    const value = this.calculate(ev.clientX);
     onMouseDown?.(value);
     onChange?.(value);
     this.setState({ value: value, mouseDown: true });
@@ -89,6 +94,8 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
   private onMouseUp = (e: any) => {
     const { onMouseUp } = this.props;
     const { value, mouseDown, } = this.state;
+    const ev = e as MouseEvent;
+    if (ev.button !== 0) return;
 
     if (mouseDown) {
       onMouseUp?.(value);
@@ -100,9 +107,9 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
     const { scrub, onChange, } = this.props;
     const { mouseDown } = this.state;
     if (!scrub || !mouseDown) return;
-    
-    const value = this.calculate((e as MouseEvent).clientX);
-    if (value === undefined) return;
+
+    const ev = e as MouseEvent;
+    const value = this.calculate(ev.clientX);
     this.setState({ value: value }, () => onChange?.(value))
   }
 
@@ -111,6 +118,7 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
       min,
       max,
       overrideValue,
+      noThumb,
     } = this.props;
     const {
       value,
@@ -118,21 +126,35 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
     } = this.state;
 
     const frac = (overrideValue || value) / (max - min);
+    const percent = frac * 100;
 
     return (
       <div className='progress-bar-container'>
-        <div
-          className='progress-bar-track'
-          onMouseDown={this.onMouseDown}
-          ref={this.trackRef}
-        >
+        <div className='progress-bar-track-container'>
           <div
-            className='progress-bar-progress'
-            style={{
-              width: `${frac*100}%`
-            }}
-          ></div>
+            className='progress-bar-track'
+            onMouseDown={this.onMouseDown}
+            ref={this.trackRef}
+          >
+            <div
+              className='progress-bar-progress'
+              style={{
+                width: `${percent}%`
+              }}
+            ></div>
+          </div>
         </div>
+        { !noThumb &&
+          <div
+            className='progress-bar-thumb'
+            style={{
+              width: PROGRESS_BAR_THUMB_SIZE,
+              height: PROGRESS_BAR_THUMB_SIZE,
+              left: `calc(${percent}% - (${PROGRESS_BAR_THUMB_SIZE}/2))`,
+            }}
+            onMouseDown={(e) => {this.onMouseDown(e); console.log('down')}}
+          ></div>
+        }
         {/* Needed so mousemove fires even when over the {pointer-events: none} canvas */}
         <div className='pointer-event-overlay'
           style={{

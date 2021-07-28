@@ -295,7 +295,7 @@ export default class App extends Component<{}, AppState> {
     return (
       <div className='app'>
         <div id='frame-container'>
-          <Frame src={this.src} />
+          <Frame src={this.src} disableClicks={flyModeEnabled} />
           <div id='overlay-container'>
             {/* Put all showcase overlay components here */}
             { path && (

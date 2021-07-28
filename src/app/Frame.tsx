@@ -5,6 +5,7 @@ interface Props {
   src: string;
   id?: string;
   customRef?: React.RefObject<HTMLIFrameElement>
+  disableClicks?: boolean;
 }
 
 /**
@@ -13,7 +14,13 @@ interface Props {
 export default class Frame extends Component<Props, {}> {
 
   render() {
-    const { src, id, customRef, children } = this.props;
+    const {
+      src,
+      id,
+      customRef,
+      children,
+      disableClicks,
+    } = this.props;
 
     return (
       <div className='frame'>
@@ -25,6 +32,7 @@ export default class Frame extends Component<Props, {}> {
           allowFullScreen={true}
           frameBorder='0'
           ref={customRef}
+          style={disableClicks ? { pointerEvents: 'none', } : undefined}
         />
         {children}
       </div>
