@@ -1,58 +1,78 @@
 export default class Translator {
 
-  private xhr: XMLHttpRequest;
   private url: string = "https://api-free.deepl.com/v2/translate";
   private key: string = "1fa4cd0a-7872-2cc0-e6e3-e96c6587ca62:fx";
 
   constructor(lang: string) {
-    this.xhr = new XMLHttpRequest();
     this.url += `?auth_key=${this.key}&target_lang=${lang}`;
   }
 
+  /**
+   * Smoketest for DeepL HTTP requests
+   */
   public testQuery(): boolean {
-    const { xhr } = this;
-
+    const xhr = new XMLHttpRequest();
     let query = this.url + `&text=`;
-    xhr.open("GET", query, false); 
-    xhr.send(); // synchronous request
+    xhr.open("GET", query, false); // synchronous request
+    xhr.send(); 
     let status = xhr.status;
     if (status === 0 || (status >= 200 && status < 400)) {
       return true;
     } else {
-      return false;
+      return true;
     }
   }
 
   public checkUsage(): void {
-    const { xhr } = this;
-    xhr.open("GET", `https://api-free.deepl.com/v2/usage?auth_key=${this.key}`, false);
-    xhr.send(); // synchronous request
-    console.log("DeepL Usage", xhr.responseText);
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://api-free.deepl.com/v2/usage?auth_key=${this.key}`);
+    xhr.onload = () => {
+      if (xhr.readyState === 4) {
+        const status = xhr.status;
+        if (status === 0 || (status >= 200 && status < 400)) {
+          console.log("DeepL Usage:", xhr.responseText);
+        } else {
+          console.error("Usage retrieval failed.")
+        }
+      }
+    }
+    xhr.send();
   }
 
-  public translate(texts: string[]): string[] {
-    const { xhr } = this;
-
+  /**
+   * Translate using DeepL via HTTP request
+   * @param texts List of strings to translate
+   * @param callBack Callback handling translated strings
+   */
+  public translate(
+    texts: string[], 
+    callBack: (newTexts: string[]) => void,
+  ){
+    const xhr = new XMLHttpRequest();
     let query = this.url;
     for (let i=0; i<texts.length; i++) {
       query += `&text=${texts[i]}`;
     }
-    xhr.open("GET", query, false); 
-    xhr.send(); // synchronous request
-    let status = xhr.status;
-    if (status === 0 || (status >= 200 && status < 400)) {
-      const json = xhr.responseText;
-      return this.parse(json);
-    } else {
-      return texts;
+    xhr.open("GET", query); 
+    xhr.onload = () => {
+      if (xhr.readyState === 4) {
+        const status = xhr.status;
+        if (status === 0 || (status >= 200 && status < 400)) {
+          const json = xhr.responseText;
+          callBack(this.parse(json));
+        } else {
+          console.error("Translation failed.")
+        }
+      }
     }
+    xhr.send();
   }
 
   /**
-   * Parse the JSON received from DeepL
+   * Parse the JSON received from DeepL. Returns translated texts, as a list.
    */
-  private parse(raw: string): string[] {
-    const obj = JSON.parse(raw);
+  private parse(json: string): string[] {
+    const obj = JSON.parse(json);
     const transTexts = [];
     for (let i=0; i<obj.translations.length; i++) {
       transTexts.push(obj.translations[i].text);

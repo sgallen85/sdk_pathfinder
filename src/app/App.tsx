@@ -279,25 +279,25 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
-  /**
-   * TODO: make async to speed up
-   */
    private async translateMattertags() {
     const { sdk, lang } = this;
 
     if (sdk && lang) {
       const Trans = new Translator(lang);
-      if (Trans.testQuery()) { // check HTTP request works
-        const mattertagData = await sdk.Mattertag.getData();
-        for (let i=0; i<mattertagData.length; i++) {
-          const { sid, label, description, media } = mattertagData[i];
-          const [ newLabel, newDescription ] = Trans.translate([label, description]);
+      //if (Trans.testQuery()) { // check HTTP request works
+      const mattertagData = await sdk.Mattertag.getData();
+      for (let i=0; i<mattertagData.length; i++) {
+        const { sid, label, description, media } = mattertagData[i];
+        const callBack = (newTexts: string[]) => {
+          const [ newLabel, newDescription] = newTexts;
           sdk.Mattertag.editBillboard(sid, {
             label: newLabel, 
             description: newDescription, 
             media,
           });
-        }
+        };
+        Trans.translate([label, description], callBack);
+        //}
       }
       Trans.checkUsage();
     }
