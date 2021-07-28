@@ -279,7 +279,7 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
-   private async translateMattertags() {
+  private async translateMattertags() {
     const { sdk, lang } = this;
 
     if (sdk && lang) {
@@ -301,6 +301,11 @@ export default class App extends Component<{}, AppState> {
       }
       Trans.checkUsage();
     }
+  }
+
+  private async changeLang(lang: string) {
+    this.lang = lang;
+    this.translateMattertags();
   }
 
   // --- Render ----------------------------------------------------------------
@@ -354,6 +359,7 @@ export default class App extends Component<{}, AppState> {
             floorMap={floorMap}
             onChange={this.onOptionSelect}
             onClose={this.toggleMenu}
+            onChangeLang={(e) => this.changeLang(e.target.value)}
           />
         }
         </div>
