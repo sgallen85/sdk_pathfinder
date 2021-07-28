@@ -15,6 +15,7 @@ interface MenuProps {
   floorMap?: Dictionary<MpSdk.Floor.FloorData>;
   onChange: (e: any) => void;
   onClose?: () => void;
+  onChangeLang: (e: any) => void;
 }
 
 interface MenuState {
@@ -109,7 +110,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
   
   public render() {
-    const { onClose } = this.props;
+    const { onClose, onChangeLang } = this.props;
     return (
       <div className='menu'>
         <div className='menu-header'>
@@ -119,6 +120,21 @@ export default class Menu extends Component<MenuProps, MenuState> {
               <Icon icon='close' />
             </button>
           }
+        </div>
+        <div>
+          <select 
+            onChange={onChangeLang}>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ru">Русский</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+            <option value="nl">Nederlands</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+          </select>
         </div>
         <Accordion>
           {this.renderGroups()}
