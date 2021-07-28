@@ -179,13 +179,13 @@ export default class App extends Component<{}, AppState> {
       if (this.pathNode) this.pathNode.stop();
       this.pathNode = await sdk.Scene.createNode();
       this.setState ({
-        path: this.pathNode.addComponent(pathRendererType, {
+        path: path.length > 1 ? this.pathNode.addComponent(pathRendererType, {
           path: path.map(id => sweepIdToPoint(id, sweepMap)),
           opacity: 0.7,
           radius: 0.12,
           stepMultiplier: 10,
           color: 0x8df763,
-        })
+        }) : undefined,
       });
       this.pathNode.start();
     }
