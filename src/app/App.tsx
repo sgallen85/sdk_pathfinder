@@ -30,6 +30,7 @@ interface AppState {
   flyModeEnabled: boolean;
   flyU: number; // integer in [0, 1] indicating position in flythrough
   flyModePlaying: boolean;
+  floorMap?: Dictionary<MpSdk.Floor.FloorData>;
 }
 
 const defaultUrlParams: any = {
@@ -141,6 +142,14 @@ export default class App extends Component<{}, AppState> {
         });
       },
     });
+
+    this.sdk.Floor.data.subscribe({
+      onCollectionUpdated: (collection: Dictionary<MpSdk.Floor.FloorData>) => {
+        this.setState({
+          floorMap: collection,
+        });
+      }
+    })
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
       if (currentSweep.sid) console.log(currentSweep.sid, currentSweep.position);
@@ -306,6 +315,7 @@ export default class App extends Component<{}, AppState> {
       flyU,
       path,
       flyModePlaying,
+      floorMap,
     } = this.state;
 
     return (
@@ -341,6 +351,7 @@ export default class App extends Component<{}, AppState> {
             selectedSweepId={selectedSweepId}
             sweepData={sweepData}
             sweepAlias={this.sweepAlias}
+            floorMap={floorMap}
             onChange={this.onOptionSelect}
             onClose={this.toggleMenu}
           />

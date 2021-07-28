@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Sweep } from '../../mp/sdk';
+import { Dictionary, MpSdk, Sweep } from '../../mp/sdk';
 import './Menu.scss';
 import Accordion from '../reusables/accordion/Accordion';
 import AccordionGroup from '../reusables/accordion/AccordionGroup';
@@ -12,6 +12,7 @@ interface MenuProps {
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[];
   sweepAlias?: SweepAlias;
+  floorMap?: Dictionary<MpSdk.Floor.FloorData>;
   onChange: (e: any) => void;
   onClose?: () => void;
 }
@@ -69,7 +70,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
    * @returns List of `<AccordionGroup>` with items inside.
    */
   private renderGroups() {
-    const { selectedSweepId } = this.props;
+    const { selectedSweepId, floorMap } = this.props;
     const sweepGroups = this.getGroups();
     const floors: any = [];
     let selectedFloor = undefined;
@@ -85,9 +86,17 @@ export default class Menu extends Component<MenuProps, MenuState> {
         }
       }
 
+      const floorName = floorMap?.[floor].name;
+      const floorSequence = floorMap?.[floor].sequence;
+
+      // use floor name, 1-indexed sequence, id in that order of priority
+      const header = floorName ||
+        (floorSequence !== undefined && `Floor ${floorSequence+1}`) ||
+        floor;
+
       floors.push(
         <AccordionGroup
-          header={`Floor ${floor}`}
+          header={header}
           expanded={!!selectedFloor && ''+selectedFloor === floor}
           showNumber={true}
           key={floor}
