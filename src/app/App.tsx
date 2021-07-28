@@ -14,6 +14,7 @@ import { sweepIdToPoint } from './utils';
 import { SweepAlias, sweepAliases } from './sweepAliases';
 import ControlsOverlay from './ui/overlay/ControlsOverlay';
 import FlyModeButton from './ui/overlay/FlyModeButton';
+import IconButton from './reusables/icon-button/IconButton';
 
 export interface Sdk extends MpSdk {
   Scene?: any;
@@ -164,9 +165,13 @@ export default class App extends Component<{}, AppState> {
   // --- SDK methods -----------------------------------------------------------
 
   private onOptionSelect = (id: string) => {
-    this.setState({
-      selectedSweepId: id,
-    });
+    if (id === this.state.selectedSweepId) {
+      this.clearSelection();
+    } else {
+      this.setState({
+        selectedSweepId: id,
+      });
+    }
   }
 
   private async handlePath() {
@@ -184,21 +189,32 @@ export default class App extends Component<{}, AppState> {
           opacity: 0.7,
           radius: 0.12,
           stepMultiplier: 10,
-          color: 0x8df763,
         }) : undefined,
       });
       this.pathNode.start();
     }
   }
 
+  private clearSelection = () => {
+    if (this.pathNode) this.pathNode.stop();
+    this.setState({
+      path: undefined,
+      selectedSweepId: undefined,
+    });
+  }
+
   private toggleFlyMode = async () => {
     const { flyModeEnabled } = this.state;
-    if (flyModeEnabled) {
-      await this.exitFly();
-    } else {
-      await this.initFly();
-    }
-    this.setState({flyModeEnabled: !flyModeEnabled});
+    this.setState({
+      flyModeEnabled: !flyModeEnabled,
+      flyU: 0,
+    }, async () => {
+      if (flyModeEnabled) {
+        await this.exitFly();
+      } else {
+        await this.initFly();
+      }
+    });
   };
 
   private initFly = async () => {
@@ -308,7 +324,11 @@ export default class App extends Component<{}, AppState> {
                 setU={this.setFlyU}
                 u={flyU}
               /> 
-              : <FlyModeButton onClick={this.toggleFlyMode} />
+              :
+              <div className='nofly-button-container'>
+                <FlyModeButton onClick={this.toggleFlyMode} />
+                <IconButton onClick={this.clearSelection} icon='close' classes={['clear-button']} />
+            </div>
             )}
           </div>
         </div>

@@ -25,7 +25,7 @@ class PathRenderer {
     visible: false,
     path: [], // positions on path
     radius: 0.15,
-    color: 0x00ff00,
+    color: 0xff3158,
     opacity: 0.5,
     heightOffset: -1.1,
     stepMultiplier: 5,

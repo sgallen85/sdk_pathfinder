@@ -1,0 +1,29 @@
+@import 'src/app/style/colors.scss';
+
+.icon-button-container {
+  button.icon-button {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 500px;
+    background-color: rgba($color-portal-black, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: $color-white;
+
+    transition: all 100ms linear;
+
+    .icon {
+      font-size: 26px;
+    }
+
+    &:hover {
+      background-color: $color-portal-black;
+      color: $color-laser-red;
+    }
+  }
+}

@@ -18,6 +18,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
+      .nofly-button-container {
+        pointer-events: all;
+        position: absolute;
+        bottom: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .clear-button {
+          position: absolute;
+          left: calc(100% + 20px);
+
+          button {
+            width: 48px;
+            height: 48px;
+          }
+        }
+      }
     }
   }
 }

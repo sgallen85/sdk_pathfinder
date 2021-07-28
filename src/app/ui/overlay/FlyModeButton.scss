@@ -1,10 +1,6 @@
 @import 'src/app/style/colors.scss';
 
 .flymode-button-container {
-  position: absolute;
-  bottom: 20px;
-  pointer-events: all;
-  
   button {
     background-color: $color-white;
     border: none;
