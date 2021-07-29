@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/sdk_pathfinder/static/css/main.27453fc9.chunk.css",
+    "main.css": "/sdk_pathfinder/static/css/main.2ac17d7e.chunk.css",
     "main.js": "/sdk_pathfinder/static/js/main.bc9596da.chunk.js",
     "main.js.map": "/sdk_pathfinder/static/js/main.bc9596da.chunk.js.map",
     "runtime-main.js": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js",
@@ -8,14 +8,14 @@
     "static/js/2.4d22c239.chunk.js": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js",
     "static/js/2.4d22c239.chunk.js.map": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js.map",
     "index.html": "/sdk_pathfinder/index.html",
-    "static/css/main.27453fc9.chunk.css.map": "/sdk_pathfinder/static/css/main.27453fc9.chunk.css.map",
+    "static/css/main.2ac17d7e.chunk.css.map": "/sdk_pathfinder/static/css/main.2ac17d7e.chunk.css.map",
     "static/js/2.4d22c239.chunk.js.LICENSE.txt": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js.LICENSE.txt",
     "static/media/Icon.scss": "/sdk_pathfinder/static/media/intern-font.b4fc9e6a.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.1dc9acb8.js",
     "static/js/2.4d22c239.chunk.js",
-    "static/css/main.27453fc9.chunk.css",
+    "static/css/main.2ac17d7e.chunk.css",
     "static/js/main.bc9596da.chunk.js"
   ]
 }
