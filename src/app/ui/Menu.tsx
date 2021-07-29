@@ -87,8 +87,8 @@ export default class Menu extends Component<MenuProps, MenuState> {
         }
       }
 
-      const floorName = floorMap?.[floor].name;
-      const floorSequence = floorMap?.[floor].sequence;
+      const floorName = floorMap?.[floor]?.name;
+      const floorSequence = floorMap?.[floor]?.sequence;
 
       // use floor name, 1-indexed sequence, id in that order of priority
       const header = floorName ||
@@ -121,6 +121,9 @@ export default class Menu extends Component<MenuProps, MenuState> {
             </button>
           }
         </div>
+        <Accordion>
+          {this.renderGroups()}
+        </Accordion>
         <div>
           <select 
             onChange={onChangeLang}>
@@ -136,9 +139,6 @@ export default class Menu extends Component<MenuProps, MenuState> {
             <option value="pt">Português</option>
           </select>
         </div>
-        <Accordion>
-          {this.renderGroups()}
-        </Accordion>
       </div>
     );
   }
