@@ -16,11 +16,7 @@ export default class Translator {
     xhr.open("GET", query, false); // synchronous request
     xhr.send(); 
     let status = xhr.status;
-    if (status === 0 || (status >= 200 && status < 400)) {
-      return true;
-    } else {
-      return true;
-    }
+    return status === 0 || (status >= 200 && status < 400);
   }
 
   public checkUsage(): void {
