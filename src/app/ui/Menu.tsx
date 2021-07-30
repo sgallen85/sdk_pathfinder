@@ -6,6 +6,7 @@ import AccordionGroup from '../reusables/accordion/AccordionGroup';
 import AccordionItem from '../reusables/accordion/AccordionItem';
 import { SweepAlias } from '../sweepAliases';
 import Icon from '../reusables/icon/Icon';
+import MenuNudge from './MenuNudge';
 
 interface MenuProps {
   currSweepId?: string;
@@ -14,17 +15,27 @@ interface MenuProps {
   sweepAlias?: SweepAlias;
   floorMap?: Dictionary<MpSdk.Floor.FloorData>;
   onChange: (e: any) => void;
-  onClose?: () => void;
+  onClose: () => void;
   onChangeLang: (e: any) => void;
 }
 
 interface MenuState {
   sweepGroups: SweepGroups;
+  displayNudge: boolean;
 }
 
 interface SweepGroups {
   [group: string]: Sweep.SweepData[];
 }
+
+/**
+ * Time (ms) until nudge displays
+ */
+const MENU_NUDGE_TIMEOUT = 2000;
+/**
+ * Key name for browser storage of whether nudge has been seen (close button clicked)
+ */
+const MENU_NUDGE_SEEN_KEY = 'menu_nudge_seen';
 
 /**
  * Component for UI elements like sweep selector, location info, etc.
@@ -35,7 +46,26 @@ export default class Menu extends Component<MenuProps, MenuState> {
     super(props);
     this.state = {
       sweepGroups: {},
-    };
+      displayNudge: false,
+    };    
+  }
+
+  public componentDidMount() {
+    const nudgeSeen = sessionStorage.getItem(MENU_NUDGE_SEEN_KEY);
+    if (!nudgeSeen || nudgeSeen === 'false') {
+      window.setTimeout(() => {
+        this.setState({
+          displayNudge: true,
+        });
+      }, MENU_NUDGE_TIMEOUT);
+    }
+  }
+
+  private onCloseNudge = () => {
+    sessionStorage.setItem(MENU_NUDGE_SEEN_KEY, 'true');
+    this.setState({
+      displayNudge: false,
+    });
   }
 
   private getGroups() {
@@ -108,37 +138,48 @@ export default class Menu extends Component<MenuProps, MenuState> {
     }
     return floors;
   }
+
+  public renderLanguageSelect() {
+    return (
+      <div style={{ marginLeft: 'auto' }}>
+        <select
+          onChange={this.props.onChangeLang}>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ru">Русский</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="nl">Nederlands</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+        </select>
+      </div>
+    );
+  }
   
   public render() {
-    const { onClose, onChangeLang } = this.props;
+    const { onClose } = this.props;
+    const { displayNudge } = this.state;
     return (
       <div className='menu'>
         <div className='menu-header'>
           <div className='menu-header-text header-font'>Sweeps</div>
-          { onClose &&
-            <button type='button' className='menu-close-button' onClick={onClose}>
-              <Icon icon='close' />
-            </button>
-          }
+          {this.renderLanguageSelect()}
+          <button type='button' className='menu-close-button' onClick={onClose}>
+            <Icon icon='close' />
+          </button>
         </div>
         <Accordion>
           {this.renderGroups()}
         </Accordion>
-        <div>
-          <select 
-            onChange={onChangeLang}>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="ru">Русский</option>
-            <option value="zh">中文</option>
-            <option value="ja">日本語</option>
-            <option value="nl">Nederlands</option>
-            <option value="it">Italiano</option>
-            <option value="pt">Português</option>
-          </select>
-        </div>
+        { displayNudge &&
+          <MenuNudge
+            text={'Select a location to begin pathfinding'}
+            onClose={this.onCloseNudge}
+          />
+        }
       </div>
     );
   }

@@ -1,0 +1,48 @@
+@import 'src/app/style/colors.scss';
+
+$nudge-bg-color: $color-moonrock-gray;
+
+.menu-nudge-container {
+  position: absolute;
+  top: 20px;
+  right: calc(100% + 20px);
+
+  min-width: 160px;
+  background-color: $nudge-bg-color;
+  color: $color-lens-gray;
+  font-size: 16px;
+  text-align: center;
+  padding: 10px;
+
+  transition: opacity 500ms ease;
+
+  // HACK: isn't displayed behind parent because it keeps dropping behind iframe as well
+  // just make sure the size is smaller than the padding for the text
+  ::before {
+    $width: 14px;
+    content: '';
+    position: absolute;
+    top: calc(50% - (#{$width} / 2));
+    right: calc(#{$width} / -2);
+    width: $width;
+    height: $width;
+    transform: rotate(45deg);
+    background-color: $nudge-bg-color;
+  }
+
+  .nudge-close-button {
+    padding-top: 10px;
+    background: none;
+    color: $color-laser-red;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 13px;
+
+    transition: border 150ms ease;
+
+    &:hover {
+      border-bottom: 1px solid $color-laser-red;
+    }
+  }
+}

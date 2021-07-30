@@ -11,14 +11,15 @@ $progress-bar-transition-time: 50ms;
   display: flex;
   align-items: center;
 
-  transition: height $progress-bar-transition-time linear;
-
+  
   .progress-bar-track-container {
     width: 100%;
     height: 4px;
     border-radius: 500px;
     overflow: hidden;
     
+    transition: height $progress-bar-transition-time linear;
+
     .progress-bar-track {
       position: relative;
       width: 100%;
