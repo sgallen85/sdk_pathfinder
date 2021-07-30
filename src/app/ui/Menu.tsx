@@ -7,6 +7,7 @@ import AccordionItem from '../reusables/accordion/AccordionItem';
 import { SweepAlias } from '../sweepAliases';
 import Icon from '../reusables/icon/Icon';
 import MenuNudge from './MenuNudge';
+import LanguageOptions from '../LanguageOptions';
 
 interface MenuProps {
   currSweepId?: string;
@@ -140,20 +141,16 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
 
   public renderLanguageSelect() {
+    const langOptions = [];
+    for (const {code, text} of Object.values(LanguageOptions)) {
+      langOptions.push(<option value={code}>{text}</option>);
+    }
     return (
       <div style={{ marginLeft: 'auto' }}>
         <select
-          onChange={this.props.onChangeLang}>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="ru">Русский</option>
-          <option value="zh">中文</option>
-          <option value="ja">日本語</option>
-          <option value="nl">Nederlands</option>
-          <option value="it">Italiano</option>
-          <option value="pt">Português</option>
+          onChange={this.props.onChangeLang}
+        >
+          {langOptions}
         </select>
       </div>
     );
