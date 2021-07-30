@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/sdk_pathfinder/static/css/main.49e3d9c7.chunk.css",
-    "main.js": "/sdk_pathfinder/static/js/main.4746010f.chunk.js",
-    "main.js.map": "/sdk_pathfinder/static/js/main.4746010f.chunk.js.map",
+    "main.css": "/sdk_pathfinder/static/css/main.0a0ed217.chunk.css",
+    "main.js": "/sdk_pathfinder/static/js/main.5d8189e2.chunk.js",
+    "main.js.map": "/sdk_pathfinder/static/js/main.5d8189e2.chunk.js.map",
     "runtime-main.js": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js",
     "runtime-main.js.map": "/sdk_pathfinder/static/js/runtime-main.1dc9acb8.js.map",
     "static/js/2.4d22c239.chunk.js": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js",
     "static/js/2.4d22c239.chunk.js.map": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js.map",
     "index.html": "/sdk_pathfinder/index.html",
-    "static/css/main.49e3d9c7.chunk.css.map": "/sdk_pathfinder/static/css/main.49e3d9c7.chunk.css.map",
+    "static/css/main.0a0ed217.chunk.css.map": "/sdk_pathfinder/static/css/main.0a0ed217.chunk.css.map",
     "static/js/2.4d22c239.chunk.js.LICENSE.txt": "/sdk_pathfinder/static/js/2.4d22c239.chunk.js.LICENSE.txt",
     "static/media/Icon.scss": "/sdk_pathfinder/static/media/intern-font.b4fc9e6a.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.1dc9acb8.js",
     "static/js/2.4d22c239.chunk.js",
-    "static/css/main.49e3d9c7.chunk.css",
-    "static/js/main.4746010f.chunk.js"
+    "static/css/main.0a0ed217.chunk.css",
+    "static/js/main.5d8189e2.chunk.js"
   ]
 }
