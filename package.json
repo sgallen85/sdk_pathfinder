@@ -53,5 +53,5 @@
     "sass-loader": "^10.1.1",
     "webpack": "^4.44.2"
   },
-  "homepage": "http://nwager-mp.github.io/sdk_pathfinder"
+  "homepage": "http://nwager-mp.github.io/sdk_wayfinder"
 }
