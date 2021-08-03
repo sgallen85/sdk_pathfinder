@@ -7,9 +7,10 @@ import AccordionItem from '../reusables/accordion/AccordionItem';
 import { SweepAlias } from '../sweepAliases';
 import Icon from '../reusables/icon/Icon';
 import MenuNudge from './MenuNudge';
-import LanguageOptions from '../LanguageOptions';
+import { LanguageOptions, loc } from '../Localization';
 
 interface MenuProps {
+  lang: string;
   currSweepId?: string;
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[];
@@ -102,7 +103,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
    * @returns List of `<AccordionGroup>` with items inside.
    */
   private renderGroups() {
-    const { selectedSweepId, floorMap } = this.props;
+    const { lang, selectedSweepId, floorMap } = this.props;
     const sweepGroups = this.getGroups();
     const floors: any = [];
     let selectedFloor = undefined;
@@ -123,7 +124,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
 
       // use floor name, 1-indexed sequence, id in that order of priority
       const header = floorName ||
-        (floorSequence !== undefined && `Floor ${floorSequence+1}`) ||
+        (floorSequence !== undefined && `${loc('Floor', lang)} ${floorSequence+1}`) ||
         floor;
 
       floors.push(
@@ -157,12 +158,12 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
   
   public render() {
-    const { onClose } = this.props;
+    const { lang, onClose } = this.props;
     const { displayNudge } = this.state;
     return (
       <div className='menu'>
         <div className='menu-header'>
-          <div className='menu-header-text header-font'>Sweeps</div>
+          <div className='menu-header-text header-font'>{loc('Locations', lang)}</div>
           {this.renderLanguageSelect()}
           <button type='button' className='menu-close-button' onClick={onClose}>
             <Icon icon='close' />
@@ -173,7 +174,8 @@ export default class Menu extends Component<MenuProps, MenuState> {
         </Accordion>
         { displayNudge &&
           <MenuNudge
-            text={'Select a location to begin pathfinding'}
+            text={loc('nudge_text', lang)}
+            closeText={loc('CLOSE', lang)}
             onClose={this.onCloseNudge}
           />
         }

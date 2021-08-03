@@ -1,16 +1,18 @@
 import { Component } from 'react';
 import './FlyModeButton.scss';
+import { loc } from '../../Localization';
 
 interface FlyModeButtonProps {
+  lang: string;
   onClick: () => void;
 }
 
 export default class FlyModeButton extends Component<FlyModeButtonProps> {
   public render() {
-    const { onClick } = this.props;
+    const { lang, onClick } = this.props;
     return (
       <div className='flymode-button-container'>
-        <button className='flymode-button' onClick={onClick}>Fly Mode</button>
+        <button className='flymode-button' onClick={onClick}>{loc('Fly Mode', lang)}</button>
       </div>
     );
   }
