@@ -15,6 +15,16 @@ const robinsonHall: SweepAlias = {
   "1b11bb808949421ba32142f4c48b9823": "B21: Warren Center Conference Room",
 };
 
+const scu: SweepAlias = {
+  "6d80bf2d4e71453aa0134fc61c2d8102": "Entrance",
+  "ff56dea1f04c4ab08d2121d805cf9be2": "Sports Performance Center",
+  "857ceb1a450d46099b6b9c66f81bd644": "Sobrato Gymnasium",
+  "8ddd9373572b4ae7a6c7063a9dacdc3b": "Rambis Family Gymnasium",
+  "cadbfa305b77449c8a5907fc2b9d1d0e": "Stevens Academic Center",
+  "6c67c4e49ee440ad9895872922a12a32": "Sports Medicine Center",
+}
+
 export const sweepAliases: any = {
   "GycExKiYVFp": robinsonHall,
+  "JYz9SNonEqa": scu,
 }
