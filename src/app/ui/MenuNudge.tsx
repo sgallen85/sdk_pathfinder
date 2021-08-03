@@ -3,6 +3,7 @@ import './MenuNudge.scss';
 
 interface MenuNudgeProps {
   text: string;
+  closeText: string;
   onClose: () => void;
 }
 
@@ -26,13 +27,13 @@ export default class MenuNudge extends Component<MenuNudgeProps, MenuNudgeState>
   }
 
   public render() {
-    const { text, onClose } = this.props;
+    const { text, closeText, onClose } = this.props;
     const { opacity } = this.state;
 
     return (
       <div className='menu-nudge-container' style={{ opacity: opacity }}>
         <div className='nudge-text'>{text}</div>
-        <button type='button' className='nudge-close-button header-font' onClick={onClose}>CLOSE</button>
+        <button type='button' className='nudge-close-button header-font' onClick={onClose}>{closeText}</button>
       </div>
     );
   }

@@ -10,14 +10,14 @@ export default class Translator {
   /**
    * Smoketest for DeepL HTTP requests
    */
-  public testQuery(): boolean {
-    const xhr = new XMLHttpRequest();
-    let query = this.url + `&text=`;
-    xhr.open("GET", query, false); // synchronous request
-    xhr.send(); 
-    let status = xhr.status;
-    return status === 0 || (status >= 200 && status < 400);
-  }
+  // public testQuery(): boolean {
+  //   const xhr = new XMLHttpRequest();
+  //   let query = this.url + `&text=`;
+  //   xhr.open("GET", query, false); // synchronous request
+  //   xhr.send(); 
+  //   let status = xhr.status;
+  //   return status === 0 || (status >= 200 && status < 400);
+  // }
 
   public checkUsage(): void {
     const xhr = new XMLHttpRequest();

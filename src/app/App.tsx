@@ -21,6 +21,7 @@ export interface Sdk extends MpSdk {
 }
 
 interface AppState {
+  lang: string;
   currSweepId?: string;
   selectedSweepId?: string;
   sweepData: Sweep.SweepData[]; // put in state because changes should trigger rerender
@@ -52,7 +53,7 @@ const defaultUrlParams: any = {
 export default class App extends Component<{}, AppState> {
 
   private src: string; // the url source for the sdk
-  private lang: string | null = null;
+  private urlLang: string | null = null;
   private sdk?: Sdk;
 
   private pathNode: any; // the node for the PathRenderer component
@@ -69,6 +70,7 @@ export default class App extends Component<{}, AppState> {
     this.src = `${process.env.PUBLIC_URL}/bundle/showcase.html?${queryString}`;
 
     this.state = {
+      lang: this.urlLang ? this.urlLang : 'en',
       sweepData: [],
       menuEnabled: true,
       flyModeEnabled: false,
@@ -83,7 +85,7 @@ export default class App extends Component<{}, AppState> {
    */
   private handleUrlParams(): string {
     const params = new URLSearchParams(window.location.search);
-    this.lang = params.get('lang');
+    this.urlLang = params.get('lang');
     for (const [k, v] of Object.entries(defaultUrlParams)) {
       if (!params.has(k)) {
         params.append(k, ''+v); // convert v to string
@@ -112,11 +114,7 @@ export default class App extends Component<{}, AppState> {
               "connect the main circulation corridor to new restrooms. Elevator lobbies and "+
               "office suite entrances were treated as extensions of the original McKim design, "+
               "with matching marble flooring and wall base, and stained oak millwork-encased "+
-              "openings. The installation of fire sprinklers throughout the building helped call "+
-              "attention to new opportunities for restoring spatial clarity; obsolete steel and "+
-              "wired glass partitions installed in the main corridor in the 1970s were removed, "+
-              "opening up the axial hallway to its original extents and further enhancing spatial "+
-              "connectivity.",
+              "openings.",
             anchorPosition: {x: 16.55, y: 1.28-1.5, z: 6.69},
             stemVector: { x: 0, y: 1, z: 0 },
           }
@@ -125,6 +123,8 @@ export default class App extends Component<{}, AppState> {
       }
     });
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    const { lang } = this.state;
 
     this.sdk.Model.getData().then( (data) => {
       const sweepData = data.sweeps;
@@ -158,8 +158,9 @@ export default class App extends Component<{}, AppState> {
       });
     });
 
-    // translate all mattertags
-    this.translateMattertags();
+    // translate all mattertags, if not English
+    if (lang !== 'en')
+      this.translateMattertags(lang);
   }
 
   public componentDidUpdate(_prevProps: any, prevState: AppState) {
@@ -279,8 +280,8 @@ export default class App extends Component<{}, AppState> {
     });
   }
 
-  private async translateMattertags() {
-    const { sdk, lang } = this;
+  private async translateMattertags(lang: string) {
+    const { sdk } = this;
 
     if (sdk && lang) {
       const Trans = new Translator(lang);
@@ -304,14 +305,15 @@ export default class App extends Component<{}, AppState> {
   }
 
   private async changeLang(lang: string) {
-    this.lang = lang;
-    this.translateMattertags();
+    this.setState({lang});
+    this.translateMattertags(lang);
   }
 
   // --- Render ----------------------------------------------------------------
 
   public render() {
     const {
+      lang,
       currSweepId,
       selectedSweepId,
       sweepData,
@@ -341,7 +343,10 @@ export default class App extends Component<{}, AppState> {
               /> 
               :
               <div className='nofly-button-container'>
-                <FlyModeButton onClick={this.toggleFlyMode} />
+                <FlyModeButton
+                  lang={lang}
+                  onClick={this.toggleFlyMode} 
+                />
                 <IconButton onClick={this.clearSelection} icon='close' classes={['clear-button']} />
             </div>
             )}
@@ -352,6 +357,7 @@ export default class App extends Component<{}, AppState> {
         }
         { menuEnabled &&
           <Menu
+            lang={lang}
             currSweepId={currSweepId}
             selectedSweepId={selectedSweepId}
             sweepData={sweepData}
