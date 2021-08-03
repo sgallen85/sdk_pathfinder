@@ -1,6 +1,6 @@
-# SDK Pathfinder with ReactJS
+# SDK Wayfinder with ReactJS
 
-https://nwager-mp.github.io/sdk_pathfinder/
+https://nwager-mp.github.io/sdk_wayfinder/
 
 ## Local Environment Setup
 
