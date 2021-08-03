@@ -21,7 +21,7 @@ export default class ControlsOverlay extends Component<ControlsOverlayProps, Con
   constructor(props: ControlsOverlayProps) {
     super(props);
     this.state = {
-      rememberPlayState: props.playing,
+      rememberPlayState: true,
     }
   }
 

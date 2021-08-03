@@ -152,7 +152,7 @@ export default class ProgressBar extends Component<ProgressBarProps, ProgressBar
               height: PROGRESS_BAR_THUMB_SIZE,
               left: `calc(${percent}% - (${PROGRESS_BAR_THUMB_SIZE}/2))`,
             }}
-            onMouseDown={(e) => {this.onMouseDown(e); console.log('down')}}
+            onMouseDown={this.onMouseDown}
           ></div>
         }
         {/* Needed so mousemove fires even when over the {pointer-events: none} canvas */}
