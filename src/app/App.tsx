@@ -152,10 +152,10 @@ export default class App extends Component<{}, AppState> {
     })
 
     this.sdk.Sweep.current.subscribe((currentSweep: any) => {
-      if (currentSweep.sid) console.log(currentSweep.sid, currentSweep.position);
-      this.setState({
-        currSweepId: currentSweep.sid,
-      });
+      if (currentSweep.sid) {
+        console.log(currentSweep.sid, currentSweep.position);
+        this.setState({currSweepId: currentSweep.sid,});
+      }
     });
 
     // translate all mattertags, if not English
