@@ -18,16 +18,26 @@ $nudge-bg-color: $color-moonrock-gray;
 
   // HACK: isn't displayed behind parent because it keeps dropping behind iframe as well
   // just make sure the size is smaller than the padding for the text
-  ::before {
-    $width: 14px;
+  &::before {
+    // $width: 14px;
+    // content: '';
+    // position: absolute;
+    // top: calc(50% - (#{$width} / 2));
+    // right: calc(#{$width} / -2);
+    // width: $width;
+    // height: $width;
+    // transform: rotate(45deg);
+    // background-color: $nudge-bg-color;
+    $width: 12px;
     content: '';
     position: absolute;
-    top: calc(50% - (#{$width} / 2));
-    right: calc(#{$width} / -2);
-    width: $width;
-    height: $width;
-    transform: rotate(45deg);
-    background-color: $nudge-bg-color;
+    left: 100%;
+    top: calc(50% - #{$width});
+    height: 0;
+    width: 0;
+    padding: none;
+    border: $width solid transparent;
+    border-left-color: $nudge-bg-color;
   }
 
   .nudge-close-button {
