@@ -85,9 +85,9 @@ export default class Menu extends Component<MenuProps, MenuState> {
   }
 
   private renderItem(s: Sweep.SweepData) {
-    const { onChange, selectedSweepId, sweepAlias } = this.props;
+    const { lang, onChange, selectedSweepId, sweepAlias } = this.props;
     const { sid } = s;
-    const name = sweepAlias ? sweepAlias[sid] : sid; // replace sid with alias, if available
+    const name = sweepAlias ? loc(sweepAlias[sid], lang) : sid; // replace sid with alias, if available
     return (
       <AccordionItem
         header={name}
