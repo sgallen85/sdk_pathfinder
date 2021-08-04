@@ -126,7 +126,7 @@ export default class App extends Component<{}, AppState> {
 
     const { lang } = this.state;
 
-    this.sdk.Model.getData().then( (data) => {
+    await this.sdk.Model.getData().then( (data) => {
       const sweepData = data.sweeps;
       this.pathfinder = new Pathfinder(sweepData);
       this.setState({
