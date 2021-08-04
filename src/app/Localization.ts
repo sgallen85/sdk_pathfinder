@@ -41,6 +41,8 @@ export const LanguageOptions = {
   },
 }
 
+// TODO: this is a temporary fix for localization. For the final product, need to make more scalable
+
 interface LookupTable {
   [key: string]: TranslationTable;
 }
@@ -58,7 +60,7 @@ const table: LookupTable = {
     'ru': "Локации",
     'zh': "地点",
     'ja': "場所",
-    'nl': "Plaatsen",
+    'nl': "Locaties",
     'it': "Posizioni",
     'pt': "Localizações",
   },
@@ -75,16 +77,16 @@ const table: LookupTable = {
     'pt': "Andar",
   },
   'nudge_text': {
-    'en': "Select a location to begin pathfinding",
-    'es': "Seleccione una ubicación para iniciar la búsqueda de rutas",
-    'fr': "Sélectionnez un emplacement pour commencer la recherche de chemin",
-    'de': "Wählen Sie einen Ort aus, um die Pfadsuche zu starten",
-    'ru': "Выберите местоположение для начала поиска пути",
+    'en': "Select a location to begin wayfinding",
+    'es': "Seleccione una ubicación para comenzar la orientación",
+    'fr': "Sélectionnez un emplacement pour commencer l'orientation",
+    'de': "Wählen Sie einen Ort aus, um mit der Wegfindung zu beginnen",
+    'ru': "Выберите место, чтобы начать поиск",
     'zh': "选择一个地点开始寻路",
-    'ja': "パスファインディングを開始する場所を選択",
-    'nl': "Selecteer een plaats om het zoeken naar een pad te beginnen",
-    'it': "Seleziona una posizione per iniziare il pathfinding",
-    'pt': "Seleccione um local para iniciar a pesquisa de caminhos",
+    'ja': "経路探索を開始する場所を選択します",
+    'nl': "Selecteer een locatie om te beginnen met bewegwijzering",
+    'it': "Seleziona una posizione per iniziare l'orientamento",
+    'pt': "Selecione um local para começar o wayfinding",
   },
   'CLOSE': {
     'en': "CLOSE",
@@ -110,13 +112,62 @@ const table: LookupTable = {
     'it': "Modalità Volo",
     'pt': "Modo Voo",
   },
+  'Great Hall': {
+    'en': "Great Hall",
+    'es': "Gran Salón",
+    'fr': "Grand Hall",
+    'de': "Großer Saal",
+    'ru': "Большой Зал",
+    'zh': "大厅",
+    'ja': "グレート・ホール",
+    'nl': "Grote Zaal",
+    'it': "Sala Grande",
+    'pt': "Grande Salão",
+  },
+  '125: History Department Conference Room': {
+    'en': "125: History Department Conference Room",
+    'es': "125: Sala de Conferencias del Departamento de Historia",
+    'fr': "125: Salle de Conférence du Département d'Histoire",
+    'de': "125: Konferenzraum der Fachbereich Geschichte",
+    'ru': "125: Конференц-зал Исторического Факультета",
+    'zh': "125: 历史系会议室",
+    'ja': "125: 歴史学部会議室",
+    'nl': "125: Geschiedenis Departement Conferentiezaal",
+    'it': "125: Sala Conferenze del Dipartimento di Storia",
+    'pt': "125: Sala de Conferências do Departamento de História",
+  },
+  '225: History Department Graduate Lounge': {
+    'en': "225: History Department Graduate Lounge",
+    'es': "225: Salón de Grados del Departamento de Historia",
+    'fr': "225: Salon des Diplômés du Département d'Histoire",
+    'de': "125: Fachbereich Geschichte Graduate Lounge",
+    'ru': "125: Гостиная для Выпускников Исторического факультета",
+    'zh': "125: 历史系研究生休息室",
+    'ja': "125: 歴史学部大学院ラウンジ",
+    'nl': "125: Geschiedenis Departement Graduate Lounge",
+    'it': "125: Salone dei Laureati del Dipartimento di Storia",
+    'pt': "125: Departamento de História Lounge de Graduados",
+  },
+  'B21: Warren Center Conference Room': {
+    'en': "225: Warren Center Conference Room",
+    'es': "225: Sala de Conferencias del Centro Warren",
+    'fr': "225: Salle de Conférence du Centre Warren",
+    'de': "125: Warren Center Konferenzraum",
+    'ru': "125: Конференц-зал Центра Уоррена",
+    'zh': "125: 沃伦中心会议厅",
+    'ja': "125: ウォーレンセンター会議室",
+    'nl': "125: Warren Center Conferentiezaal",
+    'it': "125: Sala conferenze del Warren Center",
+    'pt': "125: Sala de Conferências do Centro Warren",
+  },
 };
 
 export function loc(key: string, lang: string): string {
-  if (lang in table[key])
-    return table[key][lang];
-  else
+  if (!(key in table))
+    return key;
+  if (!(lang in table[key]))
     return table[key]['en'];
+  return table[key][lang];
 }
 
 

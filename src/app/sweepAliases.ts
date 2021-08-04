@@ -26,5 +26,5 @@ const scu: SweepAlias = {
 
 export const sweepAliases: any = {
   "GycExKiYVFp": robinsonHall,
-  "JYz9SNonEqa": scu,
+  //"JYz9SNonEqa": scu,
 }

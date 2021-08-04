@@ -285,7 +285,6 @@ export default class App extends Component<{}, AppState> {
 
     if (sdk && lang) {
       const Trans = new Translator(lang);
-      //if (Trans.testQuery()) { // check HTTP request works
       const mattertagData = await sdk.Mattertag.getData();
       for (let i=0; i<mattertagData.length; i++) {
         const { sid, label, description, media } = mattertagData[i];
@@ -298,7 +297,6 @@ export default class App extends Component<{}, AppState> {
           });
         };
         Trans.translate([label, description], callBack);
-        //}
       }
       Trans.checkUsage();
     }
