@@ -149,6 +149,7 @@ export default class Menu extends Component<MenuProps, MenuState> {
     return (
       <div style={{ marginLeft: 'auto' }}>
         <select
+          className='language-select'
           onChange={this.props.onChangeLang}
         >
           {langOptions}
