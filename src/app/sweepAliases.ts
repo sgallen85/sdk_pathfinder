@@ -24,7 +24,12 @@ const scu: SweepAlias = {
   "6c67c4e49ee440ad9895872922a12a32": "Sports Medicine Center",
 }
 
+const MatterportChicago: SweepAlias = {
+   "58aed27956224b6cb5b1d9e29cea9f87: "Putting Green"
+}
+
 export const sweepAliases: any = {
   "GycExKiYVFp": robinsonHall,
   "JYz9SNonEqa": scu,
+  "6gR9HhhJJTc": MatterportChicago
 }
