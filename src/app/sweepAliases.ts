@@ -25,7 +25,7 @@ const scu: SweepAlias = {
 }
 
 const MatterportChicago: SweepAlias = {
-   "58aed27956224b6cb5b1d9e29cea9f87: "Putting Green"
+   "58aed27956224b6cb5b1d9e29cea9f87": "Putting Green"
 }
 
 export const sweepAliases: any = {
