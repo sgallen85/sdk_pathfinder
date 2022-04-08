@@ -35,8 +35,8 @@ interface AppState {
 }
 
 const defaultUrlParams: any = {
-  m: '31o95DVF7cY',
-  applicationKey: 'x67cy2qhc1h8f1nkmh1ax3i6c',
+  m: '1CMBUuoHV8b',
+  applicationKey: '76khhicc0ppbgda3efg40xa1b',
   title: '0',
   qs: '1',
   hr: '0',
