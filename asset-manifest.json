@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/sdk_wayfinder/static/css/main.12df3479.chunk.css",
-    "main.js": "/sdk_wayfinder/static/js/main.a1c83984.chunk.js",
-    "main.js.map": "/sdk_wayfinder/static/js/main.a1c83984.chunk.js.map",
+    "main.js": "/sdk_wayfinder/static/js/main.ecaba52f.chunk.js",
+    "main.js.map": "/sdk_wayfinder/static/js/main.ecaba52f.chunk.js.map",
     "runtime-main.js": "/sdk_wayfinder/static/js/runtime-main.25dbce26.js",
     "runtime-main.js.map": "/sdk_wayfinder/static/js/runtime-main.25dbce26.js.map",
     "static/js/2.4d22c239.chunk.js": "/sdk_wayfinder/static/js/2.4d22c239.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.25dbce26.js",
     "static/js/2.4d22c239.chunk.js",
     "static/css/main.12df3479.chunk.css",
-    "static/js/main.a1c83984.chunk.js"
+    "static/js/main.ecaba52f.chunk.js"
   ]
 }
